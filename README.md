@@ -1,5 +1,5 @@
 # Graphic-Design-App
-A application used to create graphics using Java and JavaFX
+A application used to create graphics using Java, JavaFX and SQL
 
 To use javaFX, set build path:
 
