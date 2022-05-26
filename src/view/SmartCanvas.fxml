@@ -19,14 +19,17 @@
 
 <BorderPane fx:id="smartCanvasPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="961.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CanvasController">
    <right>
-      <VBox prefHeight="533.0" prefWidth="260.0" spacing="5.0" style="-fx-background-color: #C0C0C0;" BorderPane.alignment="CENTER">
+      <VBox prefHeight="533.0" prefWidth="260.0" spacing="5.0" style="-fx-background-color: DCDBDA;" BorderPane.alignment="CENTER">
          <children>
             <AnchorPane prefHeight="49.0" prefWidth="158.0">
                <children>
                   <Label fx:id="changeUsername" layoutX="59.0" layoutY="6.0" text="User" />
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="52.0" layoutX="-3.0" layoutY="-3.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                  <Button fx:id="profileBtn" layoutX="147.0" mnemonicParsing="false" text="Profile" />
-                  <Button fx:id="logout" layoutX="198.0" mnemonicParsing="false" text="Logout" />
+                  <Button fx:id="profileBtn" layoutX="140.0" layoutY="1.0" mnemonicParsing="false" style="-fx-background-color: E9EAEC;" text="Profile">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets></Button>
+                  <Button fx:id="logout" layoutX="198.0" mnemonicParsing="false" style="-fx-background-color: E9EAEC;" text="Logout" />
                   <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="-3.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </AnchorPane>
@@ -57,11 +60,13 @@
       </VBox>
    </right>
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
+      <MenuBar style="-fx-background-color: E9EAEC;" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem fx:id="dropNewCanvas" mnemonicParsing="false" onAction="#newCanvas" text="New Canvas" />
+                  <MenuItem mnemonicParsing="false" text="Clear Canvas" />
+                  <MenuItem mnemonicParsing="false" text="Save As..." />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -78,13 +83,13 @@
       </MenuBar>
    </top>
    <left>
-      <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: #C0C0C0;" BorderPane.alignment="CENTER">
+      <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: DCDBDA;" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="inputText" mnemonicParsing="false" onAction="#addText" prefHeight="71.0" prefWidth="86.0" text="Text" />
-            <Button mnemonicParsing="false" onAction="#addRect" prefHeight="71.0" prefWidth="86.0" text="Rect" />
-            <Button mnemonicParsing="false" onAction="#addCircle" prefHeight="71.0" prefWidth="86.0" text="Circle" />
-            <Button mnemonicParsing="false" onAction="#addImage" prefHeight="71.0" prefWidth="86.0" text="Image" />
-            <Button mnemonicParsing="false" onAction="#modifyCanvas" prefHeight="71.0" prefWidth="86.0" text="Canvas" />
+            <Button fx:id="inputText" mnemonicParsing="false" onAction="#addText" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: #E9EAEC;" text="Text" />
+            <Button mnemonicParsing="false" onAction="#addRect" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Rect" />
+            <Button mnemonicParsing="false" onAction="#addCircle" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Circle" />
+            <Button mnemonicParsing="false" onAction="#addImage" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Image" />
+            <Button mnemonicParsing="false" onAction="#modifyCanvas" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Canvas" />
          </children>
          <padding>
             <Insets left="5.0" top="5.0" />
@@ -92,7 +97,7 @@
       </VBox>
    </left>
    <bottom>
-      <AnchorPane prefHeight="46.0" prefWidth="961.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="46.0" prefWidth="961.0" style="-fx-background-color: E9EAEC;" BorderPane.alignment="CENTER">
          <children>
             <Slider layoutX="709.0" layoutY="15.0" />
             <Label layoutX="847.0" layoutY="14.0" text="Zoom: " />

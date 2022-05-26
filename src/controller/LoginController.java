@@ -3,6 +3,7 @@ package controller;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import data.UserInfoHolder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -106,6 +107,8 @@ public class LoginController {
 						model.setCurrentUser(user);
 						message.setText("Login success for " + user.getUsername());
 						message.setTextFill(Color.GREEN);
+						UserInfoHolder holder = UserInfoHolder.getInstance();
+						holder.setUsername(user.getUsername());
 
 
 						// Navigate to Smart Canvas

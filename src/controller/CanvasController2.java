@@ -183,10 +183,7 @@ public class CanvasController2 {
 			
 //			double canvasWidth = Double.parseDouble(Data.width);
 //			double heightWidth = Double.parseDouble(Data.height);
-			System.out.println(Data.width);
-			System.out.println(Data.height);
-			Data.width = "";
-			Data.height = "";
+		
 			
 //			Pane canvas2 = new Pane();
 //			canvas2.setStyle("-fx-background-color: black;");

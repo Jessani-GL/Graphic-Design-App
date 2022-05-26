@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -34,9 +35,9 @@ public class CreateNewCanvasController {
 	@FXML
 	private Button cancel;
 	@FXML
-	private TextField heightText;
+	private TextField textHeight;
 	@FXML
-	private TextField widthText;
+	private TextField textWidth;
 	@FXML
 	private Label resultLabel;
 	@FXML
@@ -76,12 +77,21 @@ public class CreateNewCanvasController {
 //			} catch (IOException e) {
 //				System.out.print(e);
 //			}
-			String widthTextInfo = widthText.getText();
-			String heightTextInfo = heightText.getText();
+			Node node = (Node) event.getSource();
+			this.stage = (Stage) node.getScene().getWindow();
+			String widthTextInfo = textWidth.getText();
+			String heightTextInfo = textHeight.getText();
 			
-			Data.width = widthTextInfo;
-			Data.height = heightTextInfo;
+			double canvasWidth = Double.parseDouble(widthTextInfo);
+			double cavnasHeight = Double.parseDouble(heightTextInfo);
 //			
+			System.out.println(widthTextInfo);
+			
+			NewCanvasHolder holder = NewCanvasHolder.getInstance();
+			
+			holder.setHeight(cavnasHeight);
+			holder.setWidth(canvasWidth);
+//		
 //			newCanvasPane.getChildren().removeAll();
 //			newCanvasPane.getChildren().setAll(smartCanvasPane);
 			
@@ -96,60 +106,60 @@ public class CreateNewCanvasController {
 
 	}
 	
-	public double processWidth() {
-		String widthTextInfo = widthText.getText();
-		String heightTextInfo = heightText.getText();
-		double canvasWidth = 0;
-		double heightWidth = 0;
-		
-		if (!widthTextInfo.isEmpty() && heightTextInfo.isEmpty()) {
-			resultLabel.setText("Where is your numbers?");
-		} 
-		else {
-			
-			try {
-				canvasWidth = Double.parseDouble(widthTextInfo);
-				heightWidth = Double.parseDouble(heightTextInfo);
-				if(canvasWidth <= 0 && heightWidth <= 0) {
-					resultLabel.setText("You must enter a positive number.");
-				} else {
-					resultLabel.setText("Value width result: " + canvasWidth + "and " + heightWidth);
-				}
-			} catch (NumberFormatException e) {
-				resultLabel.setText("You must enter a valid number");	
-			}
-		}
-		System.out.println("User clicked Ok");
-		return canvasWidth;
-	}
-	
-
-	public double processHeight() {
-		String widthTextInfo = widthText.getText();
-		String heightTextInfo = heightText.getText();
-		double canvasWidth = 0;
-		double heightWidth = 0;
-		
-		if (!widthTextInfo.isEmpty() && heightTextInfo.isEmpty()) {
-			resultLabel.setText("Where are your numbers?");
-		} 
-		else {
-			
-			try {
-				canvasWidth = Double.parseDouble(widthTextInfo);
-				heightWidth = Double.parseDouble(heightTextInfo);
-				if(canvasWidth <= 0 && heightWidth <= 0) {
-					resultLabel.setText("You must enter a positive number.");
-				} else {
-					resultLabel.setText("Value width result: " + canvasWidth + "and " + heightWidth);
-				}
-			} catch (NumberFormatException e) {
-				resultLabel.setText("You must enter a valid number");	
-			}
-		}
-		System.out.println("User clicked Ok");
-		return heightWidth;
-	}
+//	public double processWidth() {
+////		String widthTextInfo = widthText.getText();
+////		String heightTextInfo = heightText.getText();
+//		double canvasWidth = 0;
+//		double heightWidth = 0;
+//		
+//		if (!widthTextInfo.isEmpty() && heightTextInfo.isEmpty()) {
+//			resultLabel.setText("Where is your numbers?");
+//		} 
+//		else {
+//			
+//			try {
+//				canvasWidth = Double.parseDouble(widthTextInfo);
+//				heightWidth = Double.parseDouble(heightTextInfo);
+//				if(canvasWidth <= 0 && heightWidth <= 0) {
+//					resultLabel.setText("You must enter a positive number.");
+//				} else {
+//					resultLabel.setText("Value width result: " + canvasWidth + "and " + heightWidth);
+//				}
+//			} catch (NumberFormatException e) {
+//				resultLabel.setText("You must enter a valid number");	
+//			}
+//		}
+//		System.out.println("User clicked Ok");
+//		return canvasWidth;
+//	}
+//	
+//
+//	public double processHeight() {
+////		String widthTextInfo = widthText.getText();
+////		String heightTextInfo = heightText.getText();
+//		double canvasWidth = 0;
+//		double heightWidth = 0;
+//		
+//		if (!widthTextInfo.isEmpty() && heightTextInfo.isEmpty()) {
+//			resultLabel.setText("Where are your numbers?");
+//		} 
+//		else {
+//			
+//			try {
+//				canvasWidth = Double.parseDouble(widthTextInfo);
+//				heightWidth = Double.parseDouble(heightTextInfo);
+//				if(canvasWidth <= 0 && heightWidth <= 0) {
+//					resultLabel.setText("You must enter a positive number.");
+//				} else {
+//					resultLabel.setText("Value width result: " + canvasWidth + "and " + heightWidth);
+//				}
+//			} catch (NumberFormatException e) {
+//				resultLabel.setText("You must enter a valid number");	
+//			}
+//		}
+//		System.out.println("User clicked Ok");
+//		return heightWidth;
+//	}
 
 	public void showStage(DialogPane newCanvas) {
 		Scene scene = new Scene(newCanvas, 479, 290);

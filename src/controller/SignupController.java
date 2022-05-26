@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import data.UserInfoHolder;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -24,9 +25,14 @@ import javafx.util.Callback;
 import model.Model;
 import model.User;
 
+
 public class SignupController {
 	@FXML
 	private TextField username;
+	@FXML
+	private TextField firstName;
+	@FXML
+	private TextField lastName;
 	@FXML
 	private TextField password;
 	@FXML
@@ -77,10 +83,15 @@ public class SignupController {
 			if (!username.getText().isEmpty() && !password.getText().isEmpty()) {
 				User user;
 				try {
-					user = model.getUserDao().createUser(username.getText(), password.getText());
+					user = model.getUserDao().createUser(username.getText(), password.getText(),
+							firstName.getText(), lastName.getText());
 					if (user != null) {
 						status.setText("Created " + user.getUsername());
 						status.setTextFill(Color.GREEN);
+						UserInfoHolder holder = UserInfoHolder.getInstance();
+						holder.setFirstName(user.getFirstName());
+						holder.setLastName(user.getLastName());
+						
 						
 						stage.close();
 						parentStage.show();

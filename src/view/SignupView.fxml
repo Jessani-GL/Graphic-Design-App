@@ -29,9 +29,9 @@
             <Insets bottom="5.0" />
          </VBox.margin></TextField>
       <Label prefHeight="17.0" prefWidth="250.0" text="First name" textFill="WHITE" />
-      <TextField fx:id="username1" maxWidth="250.0" />
+      <TextField fx:id="firstName" maxWidth="250.0" />
       <Label prefHeight="17.0" prefWidth="250.0" text="Last name" textFill="WHITE" />
-      <TextField fx:id="username11" maxWidth="250.0" />
+      <TextField fx:id="lastName" maxWidth="250.0" />
       <Label prefWidth="250.0" text="Password" textFill="WHITE" />
       <PasswordField fx:id="password" maxWidth="250.0">
          <VBox.margin>

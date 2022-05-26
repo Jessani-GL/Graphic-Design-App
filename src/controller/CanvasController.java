@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+
+import data.UserInfoHolder;
 import javafx.scene.control.TextArea;
 
 import javafx.event.ActionEvent;
@@ -13,6 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -21,8 +24,10 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -30,6 +35,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -83,7 +89,10 @@ public class CanvasController {
 
 	@FXML
 	public void initialize() {
+		UserInfoHolder holder = UserInfoHolder.getInstance();
 		
+//		changeUsername.setText(holder.getUsername());
+		changeUsername.setText(holder.getFirstName() + " " + holder.getLastName());
 		
 		profileBtn.setOnAction(event -> {
 			try {
@@ -133,19 +142,10 @@ public class CanvasController {
 				createNewCanvasController.showStage(newCanvas);
 
 //				stage.close();
-				
-				
-				// Get information from another file
-				double canvasWidth = Double.parseDouble(Data.width);
-				double canvasHeight = Double.parseDouble(Data.height);
-				addANewCanvas(canvasWidth, canvasHeight);
-				
-				System.out.println(Data.width);
-				System.out.println(Data.height);
-				System.out.println(canvasWidth);
-				System.out.println(canvasHeight);
-				Data.width = "";
-				Data.height = "";
+				NewCanvasHolder canvasHolder = NewCanvasHolder.getInstance();
+			
+				// Get width and height information from another file for the new canvas
+				addANewCanvas(canvasHolder.getHeight(), canvasHolder.getWidth());
 				
 				System.out.println("yellow");
 			} catch (IOException e) {
@@ -164,45 +164,16 @@ public class CanvasController {
 	public void addANewCanvas(Double width, Double height) {
 		canvas2 = new Pane();
 		Scene newScene1 = new Scene(canvas2);
-		canvas2.setStyle("-fx-background-color: gray;");
+		canvas2.setStyle("-fx-background-color: white;");
 //		canvas2.setPrefSize(200, 200);
-		canvas2.setMaxHeight(500);
-		canvas2.setMaxWidth(500);
+		canvas2.setMaxHeight(height);
+		canvas2.setMaxWidth(width);
+		canvas2.setEffect(new DropShadow());
 		smartCanvasPane.setCenter(canvas2);
 	}
 
 //	@FXML
 	public void newCanvas(ActionEvent Event) {
-	
-	
-		System.out.println("hello");
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/createNewCanvas.fxml"));
-
-			// Customize controller instance
-			Callback<Class<?>, Object> controllerFactory = param -> {
-				return new CreateNewCanvasController(stage, model);
-			};
-
-			loader.setControllerFactory(controllerFactory);
-			GridPane newCanvas = loader.load();
-
-			CreateNewCanvasController createNewCanvasController = loader.getController();
-//			createNewCanvasController.showStage(newCanvas);
-
-			stage.close();
-
-			System.out.println("bruh");
-
-//			Scene scene = new Scene(profileStage);
-//			stage.setScene(scene);
-//			stage.show();
-			System.out.println("yellow");
-		} catch (IOException e) {
-//			message.setText(e.getMessage());
-			System.out.println("yea nah");
-			System.out.println(e.getMessage());
-		}
 	
 	}
 //	@FXML
@@ -291,33 +262,39 @@ public class CanvasController {
 	}
 
 	public void addNewCanvas() {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SmartCanvas.fxml"));
-		try {
-			gridPane2 = loader.load();
-
-			Scene newScene1 = new Scene(gridPane2, 1140, 738);
-
-			Pane canvas2 = new Pane();
-			canvas2.setStyle("-fx-background-color: white;");
-			canvas2.setPrefSize(200, 200);
-			gridPane2.add(canvas2, 1, 1, 1, 1);
-			stage.setScene(newScene1);
-			stage.show();
-
-		} catch (IOException e) {
-
-			System.out.println(e);
-			e.printStackTrace();
-
-		}
+//		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SmartCanvas.fxml"));
+//		try {
+//			gridPane2 = loader.load();
+//
+//			Scene newScene1 = new Scene(gridPane2, 1140, 738);
+//
+//			Pane canvas2 = new Pane();
+//			canvas2.setStyle("-fx-background-color: white;");
+//			canvas2.setPrefSize(200, 200);
+//			gridPane2.add(canvas2, 1, 1, 1, 1);
+//			stage.setScene(newScene1);
+//			stage.show();
+//
+//		} catch (IOException e) {
+//
+//			System.out.println(e);
+//			e.printStackTrace();
+//
+//		}
 	}
 
 	@FXML
 	public void addText(ActionEvent Event) {
-
 		
-		TextArea text = new TextArea("Drag me!");
-
+		TextArea textArea = new TextArea("Drag me!");
+		
+		Text text = new Text();
+		text.setText("Hello");
+		text.setX(50);
+		text.setY(50);
+		canvas2.getChildren().add(text);
+		canvas2.getChildren().forEach(this::makeDraggable);
+		
 		System.out.println("bruh");
 
 	}
@@ -330,12 +307,13 @@ public class CanvasController {
 		rectangle.setY(100);
 		rectangle.setWidth(100);
 		rectangle.setHeight(100);
-		rectangle.setStroke(Color.RED);
+//		rectangle.setStroke(Color.RED);
 		rectangle.setOpacity(10);
 		rectangle.setFill(Color.AQUAMARINE);
 		rectangle.setStrokeWidth(1);
 		
 		canvas2.getChildren().add(rectangle);
+		canvas2.getChildren().forEach(this::makeDraggable);
 
 	}
 
@@ -345,77 +323,40 @@ public class CanvasController {
 		Circle circle = new Circle();
 		circle.setCenterX(350);
 		circle.setCenterY(350);
-		circle.setFill(Color.YELLOW);
+		circle.setRadius(50);
+		circle.setFill(Color.AQUA);
+		
+		canvas2.getChildren().add(circle);
+		canvas2.getChildren().forEach(this::makeDraggable);
 		System.out.println("bruh");
+		
+	
 
 	}
 
+	private double startX;
+	private double startY;
 	@FXML
 	public void addImage(ActionEvent Event) {
 
 		System.out.println("bruh");
 
 	}
+	
+	public void makeDraggable(Node node) {
+		
+		node.setOnMousePressed(e -> {
+			startX = e.getSceneX() - node.getTranslateX();
+			startY = e.getSceneX() - node.getTranslateX();
+		});
+		
+		node.setOnMouseDragged(e -> {
+			node.setTranslateX(e.getSceneX() - startX);
+			node.setTranslateY(e.getSceneY() - startY);
+		});
+		
+	}
 
-//	@FXML
-//	public void profileBtn(ActionEvent Event) {
-//
-//		try {
-//			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Profile.fxml"));
-//			
-//			// Customize controller instance
-//			Callback<Class<?>, Object> controllerFactory = param -> {
-//				return new CanvasProfileController(stage, model);
-//			};
-//
-//			loader.setControllerFactory(controllerFactory);
-//			GridPane root = loader.load();
-//			
-//			CanvasProfileController canvasProfileController = loader.getController();
-//			canvasProfileController.showStage(root);
-//			
-//			stage.close();
-//		} catch (IOException e) {
-////			message.setText(e.getMessage());
-//		}
-////		Parent pane;
-////		try {
-////			pane = FXMLLoader.load(
-////			           getClass().getResource("/view/Profile.fxml"));
-////			System.out.println("bruh");
-////			
-////			Scene scene = new Scene(pane);
-////			stage.setScene(scene);
-////			stage.show();
-////			
-//////			profileOkBtn.setOnAction(event -> {
-//////				System.out.print("bruh");
-//////			});
-////			
-//////			profileImage.setOnMouseClicked(event-> {
-//////				System.out.println("Choose Image");
-//////				
-//////				FileChooser fileChooser = new FileChooser();
-//////				
-//////				fileChooser.setSelectedExtensionFilter(new ExtensionFilter("images", "*.jpeg", "*.jpg", "*.png"));
-//////				
-//////				File selectedFile = fileChooser.showOpenDialog(stage);
-//////				
-//////				try {
-//////					FileInputStream fileInputStream = new FileInputStream(selectedFile);
-//////					profileImage.setImage(new Image(fileInputStream));
-//////				} catch (FileNotFoundException e) {
-//////					e.printStackTrace();
-////////					status.setTextFill(Color.RED);
-//////				}
-//////		});
-////			
-////		} catch (IOException e) {
-////			// TODO Auto-generated catch block
-////			e.printStackTrace();
-////		}
-//
-//	}
 
 //	@FXML
 //	private void changeProfileImage() {
@@ -481,7 +422,7 @@ public class CanvasController {
 		Scene scene = new Scene(root, 1140, 738);
 		stage.setScene(scene);
 		stage.setResizable(false);
-		stage.setTitle("Sign up");
+		stage.setTitle("Smart Canvas");
 		stage.show();
 	}
 
