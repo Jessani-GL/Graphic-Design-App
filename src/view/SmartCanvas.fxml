@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
@@ -17,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<BorderPane fx:id="smartCanvasPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="560.0" prefWidth="961.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CanvasController">
+<BorderPane fx:id="smartCanvasPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="695.0" prefWidth="1097.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CanvasController">
    <right>
       <VBox prefHeight="533.0" prefWidth="260.0" spacing="5.0" style="-fx-background-color: DCDBDA;" BorderPane.alignment="CENTER">
          <children>
@@ -65,8 +66,9 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
               <MenuItem fx:id="dropNewCanvas" mnemonicParsing="false" onAction="#newCanvas" text="New Canvas" />
-                  <MenuItem mnemonicParsing="false" text="Clear Canvas" />
-                  <MenuItem mnemonicParsing="false" text="Save As..." />
+                  <MenuItem fx:id="dropClearCanvas" disable="true" mnemonicParsing="false" text="Clear Canvas" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="dropSaveAs" disable="true" mnemonicParsing="false" text="Save As..." />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -76,7 +78,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem fx:id="aboutMenu" mnemonicParsing="false" text="About" />
             </items>
           </Menu>
         </menus>
@@ -85,7 +87,7 @@
    <left>
       <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: DCDBDA;" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="inputText" mnemonicParsing="false" onAction="#addText" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: #E9EAEC;" text="Text" />
+            <Button mnemonicParsing="false" onAction="#addText" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: #E9EAEC;" text="Text" />
             <Button mnemonicParsing="false" onAction="#addRect" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Rect" />
             <Button mnemonicParsing="false" onAction="#addCircle" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Circle" />
             <Button mnemonicParsing="false" onAction="#addImage" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Image" />
@@ -99,9 +101,9 @@
    <bottom>
       <AnchorPane prefHeight="46.0" prefWidth="961.0" style="-fx-background-color: E9EAEC;" BorderPane.alignment="CENTER">
          <children>
-            <Slider layoutX="709.0" layoutY="15.0" />
-            <Label layoutX="847.0" layoutY="14.0" text="Zoom: " />
-            <Label layoutX="23.0" layoutY="14.0" text="Coordinates" />
+            <Slider fx:id="slider" layoutX="832.0" layoutY="16.0" max="200.0" prefHeight="16.0" prefWidth="164.0" value="100.0" />
+            <Label fx:id="zoomLabel" layoutX="994.0" layoutY="15.0" text="Zoom:  100%" />
+            <Label fx:id="coordinates" layoutX="23.0" layoutY="14.0" text="Coordinates" />
          </children>
       </AnchorPane>
    </bottom>

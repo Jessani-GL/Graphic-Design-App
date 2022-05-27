@@ -3,28 +3,22 @@ package controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.SQLException;
-
 import data.UserInfoHolder;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.util.Callback;
 import model.Model;
 import model.User;
-
 
 public class SignupController {
 	@FXML
@@ -41,13 +35,13 @@ public class SignupController {
 	private Button close;
 	@FXML
 	private Label status;
-	@FXML 
+	@FXML
 	private ImageView changeImage;
-	
+
 	private Stage stage;
 	private Stage parentStage;
 	private Model model;
-	
+
 	public SignupController(Stage parentStage, Model model) {
 		this.stage = new Stage();
 		this.parentStage = parentStage;
@@ -83,16 +77,15 @@ public class SignupController {
 			if (!username.getText().isEmpty() && !password.getText().isEmpty()) {
 				User user;
 				try {
-					user = model.getUserDao().createUser(username.getText(), password.getText(),
-							firstName.getText(), lastName.getText());
+					user = model.getUserDao().createUser(username.getText(), password.getText(), firstName.getText(),
+							lastName.getText());
 					if (user != null) {
 						status.setText("Created " + user.getUsername());
 						status.setTextFill(Color.GREEN);
 						UserInfoHolder holder = UserInfoHolder.getInstance();
 						holder.setFirstName(user.getFirstName());
 						holder.setLastName(user.getLastName());
-						
-						
+
 						stage.close();
 						parentStage.show();
 					} else {
@@ -103,7 +96,7 @@ public class SignupController {
 					status.setText(e.getMessage());
 					status.setTextFill(Color.RED);
 				}
-				
+
 			} else {
 				status.setText("Empty username or password");
 				status.setTextFill(Color.RED);
@@ -114,20 +107,19 @@ public class SignupController {
 			stage.close();
 			parentStage.show();
 		});
-		
-		
+
 	}
-	
+
 	@FXML
 	private void changeProfileImage() {
 		System.out.println("Choose Image");
-		
+
 		FileChooser fileChooser = new FileChooser();
-		
+
 		fileChooser.setSelectedExtensionFilter(new ExtensionFilter("images", "*.jpeg", "*.jpg", "*.png"));
-		
+
 		File selectedFile = fileChooser.showOpenDialog(stage);
-		
+
 		try {
 			FileInputStream fileInputStream = new FileInputStream(selectedFile);
 			changeImage.setImage(new Image(fileInputStream));
@@ -136,7 +128,7 @@ public class SignupController {
 			status.setTextFill(Color.RED);
 		}
 	}
-	
+
 	public void showStage(Pane root) {
 		Scene scene = new Scene(root, 587, 470);
 		stage.setScene(scene);

@@ -4,17 +4,14 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import data.UserInfoHolder;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -33,7 +30,9 @@ public class LoginController {
 	@FXML
 	private Button login;
 	@FXML
-	private Button signup;
+	private Label signup;
+	@FXML
+	private Button close;
 
 	private Model model;
 	private Stage stage;
@@ -158,7 +157,7 @@ public class LoginController {
 			password.clear();
 		});
 		
-		signup.setOnAction(event -> {
+		signup.setOnMouseClicked(event -> {
 			try {
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignupView.fxml"));
 				
@@ -181,28 +180,12 @@ public class LoginController {
 			} catch (IOException e) {
 				message.setText(e.getMessage());
 			}});
+		
+		close.setOnAction(e -> {
+			stage.close();
+		});
 	}
 	
-//	public void navigateToCanvas() throws Exception {              
-//		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SmartCanvas.fxml"));
-//		
-//		// Customize controller instance
-//		Callback<Class<?>, Object> controllerFactory = param -> {
-//			return new SmartCanvasController(stage, model);
-//		};
-//
-//		loader.setControllerFactory(controllerFactory);
-//		Parent root = loader.load();
-//		
-//		SmartCanvasController smartcanvasController = loader.getController();
-//		smartcanvasController.showStage(root);
-//		
-//		message.setText("");
-//		name.clear();
-//		password.clear();
-//		
-//		stage.close();
-//	}
 	public void showStage(Pane root) {
 		Scene scene = new Scene(root, 587, 470);
 		stage.setScene(scene);

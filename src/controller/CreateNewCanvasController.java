@@ -58,25 +58,6 @@ public class CreateNewCanvasController {
 
 		okBtn.setOnAction(event -> {
 
-//			try {
-//				FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SmartCanvas2.fxml"));
-//				
-//				// Customize controller instance
-//				Callback<Class<?>, Object> controllerFactory = param -> {
-//					return new CanvasController2(stage, model);
-//				};
-//				
-//				loader.setControllerFactory(controllerFactory);
-//				GridPane canvasStage = loader.load();
-//				
-//				CanvasController2 canvasController = loader.getController();
-//				canvasController.showStage(canvasStage);
-//				
-//				stage.close();
-//				System.out.print("print");
-//			} catch (IOException e) {
-//				System.out.print(e);
-//			}
 			Node node = (Node) event.getSource();
 			this.stage = (Stage) node.getScene().getWindow();
 			String widthTextInfo = textWidth.getText();
