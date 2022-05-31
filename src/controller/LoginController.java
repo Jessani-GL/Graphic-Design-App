@@ -1,7 +1,11 @@
 package controller;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 
 import data.UserInfoHolder;
 import javafx.fxml.FXML;
@@ -37,42 +41,14 @@ public class LoginController {
 	private Model model;
 	private Stage stage;
 	private BorderPane canvasStage = null;
-	
-	
+
 	public LoginController(Stage stage, Model model) {
 		this.stage = stage;
 		this.model = model;
 	}
-	
-	public BorderPane getCanvasStage() {;
-	try {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SmartCanvas.fxml"));
-		
-		// Customize controller instance
-		Callback<Class<?>, Object> controllerFactory = param -> {
-			return new CanvasController(stage, model);
-		};
 
-		loader.setControllerFactory(controllerFactory);
-		canvasStage = loader.load();
-		
-		CanvasController canvasController = loader.getController();
-		canvasController.showStage(canvasStage);
-		
-		message.setText("");
-		name.clear();
-		password.clear();
-		
-		stage.close();
-	} catch (IOException e) {
-		message.setText(e.getMessage());
-	}
-	
-	return canvasStage;
-	}
-	
 	@FXML
-	public void initialize() {		
+	public void initialize() {
 //		login.setOnAction(event -> {
 //			try {
 //				FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SmartCanvas.fxml"));
@@ -96,6 +72,62 @@ public class LoginController {
 //			} catch (IOException e) {
 //				message.setText(e.getMessage());
 //			}});
+
+//		login.setOnAction(event -> {
+//			if (!name.getText().isEmpty() && !password.getText().isEmpty()) {
+//				User user;
+//				try {
+//					user = model.getUserDao().getUser(name.getText(), password.getText());
+//					if (user != null) {
+//						model.setCurrentUser(user);
+//						message.setText("Login success for " + user.getUsername());
+//						message.setTextFill(Color.GREEN);
+//						UserInfoHolder holder = UserInfoHolder.getInstance();
+//						holder.setUsername(user.getUsername());
+//
+//						// Navigate to Smart Canvas
+//						try {
+//							FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SmartCanvas.fxml"));
+//
+//							// Customize controller instance
+//							Callback<Class<?>, Object> controllerFactory = param -> {
+//								return new CanvasController(stage, model);
+//							};
+//
+//							loader.setControllerFactory(controllerFactory);
+//							BorderPane root = loader.load();
+//
+//							CanvasController canvasController = loader.getController();
+//							canvasController.showStage(root);
+//
+//							message.setText("");
+//							name.clear();
+//							password.clear();
+//
+//							stage.close();
+//						} catch (IOException e) {
+//							message.setText(e.getMessage());
+//						}
+//
+//					} else {
+//						message.setText("Wrong username or password");
+//						message.setTextFill(Color.RED);
+//					}
+//				} catch (SQLException e) {
+//					message.setText(e.getMessage());
+//					message.setTextFill(Color.RED);
+//				} catch (Exception e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//
+//			} else {
+//				message.setText("Empty username or password");
+//				message.setTextFill(Color.RED);
+//			}
+//			name.clear();
+//			password.clear();
+//		});
 		
 		login.setOnAction(event -> {
 			if (!name.getText().isEmpty() && !password.getText().isEmpty()) {
@@ -104,16 +136,15 @@ public class LoginController {
 					user = model.getUserDao().getUser(name.getText(), password.getText());
 					if (user != null) {
 						model.setCurrentUser(user);
-						message.setText("Login success for " + user.getUsername());
-						message.setTextFill(Color.GREEN);
+//						message.setText("Login success for " + user.getUsername());
+//						message.setTextFill(Color.GREEN);
 						UserInfoHolder holder = UserInfoHolder.getInstance();
 						holder.setUsername(user.getUsername());
-
 
 						// Navigate to Smart Canvas
 						try {
 							FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SmartCanvas.fxml"));
-							
+
 							// Customize controller instance
 							Callback<Class<?>, Object> controllerFactory = param -> {
 								return new CanvasController(stage, model);
@@ -121,46 +152,55 @@ public class LoginController {
 
 							loader.setControllerFactory(controllerFactory);
 							BorderPane root = loader.load();
-							
+
 							CanvasController canvasController = loader.getController();
 							canvasController.showStage(root);
-							
-							message.setText("");
+
+//							message.setText("");
 							name.clear();
 							password.clear();
-							
+
 							stage.close();
 						} catch (IOException e) {
-							message.setText(e.getMessage());
+//							message.setText(e.getMessage());
+							System.out.println(e);
 						}
 
-						
-				        
-				        
 					} else {
-						message.setText("Wrong username or password");
-						message.setTextFill(Color.RED);
+//						message.setText("Wrong username or password");
+//						message.setTextFill(Color.RED);
+						
 					}
 				} catch (SQLException e) {
-					message.setText(e.getMessage());
-					message.setTextFill(Color.RED);
+//					message.setText(e.getMessage());
+//					message.setTextFill(Color.RED);
+					System.out.println(e);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} 
-				
+					System.out.println(e);
+				}
+
 			} else {
-				message.setText("Empty username or password");
-				message.setTextFill(Color.RED);
+//				message.setText("Empty username or password");
+//				message.setTextFill(Color.RED);
 			}
 			name.clear();
 			password.clear();
 		});
-		
+//String hashedPassword = "cc25c0f861a83f5efadc6e1ba9d1269e";
+//		
+//		if (encryptor.encryptString(password).equals(hashedPassword)) {
+//			System.out.println("Correct");
+//		} else {
+//			System.out.println("Incorrect");
+//		}
+
 		signup.setOnMouseClicked(event -> {
+			System.out.println("hello");
 			try {
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/SignupView.fxml"));
-				
+
 				// Customize controller instance
 				Callback<Class<?>, Object> controllerFactory = param -> {
 					return new SignupController(stage, model);
@@ -168,24 +208,41 @@ public class LoginController {
 
 				loader.setControllerFactory(controllerFactory);
 				VBox root = loader.load();
-				
+
 				SignupController signupController = loader.getController();
 				signupController.showStage(root);
-				
-				message.setText("");
+
+//				message.setText("");
 				name.clear();
 				password.clear();
-				
+				System.out.println("hello");
 				stage.close();
 			} catch (IOException e) {
-				message.setText(e.getMessage());
-			}});
-		
+//				message.setText(e.getMessage());
+//				System.out.println(e);
+			}
+		});
+
 		close.setOnAction(e -> {
 			stage.close();
 		});
 	}
-	
+
+	public SecretKey decryptUserPassword(int password) {
+		KeyGenerator keyGenerator;
+		SecretKey key = null;
+		try {
+			keyGenerator = KeyGenerator.getInstance("AES");
+			keyGenerator.init(password);
+			key = keyGenerator.generateKey();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return key;
+	}
+
 	public void showStage(Pane root) {
 		Scene scene = new Scene(root, 587, 470);
 		stage.setScene(scene);
@@ -194,4 +251,3 @@ public class LoginController {
 		stage.show();
 	}
 }
-

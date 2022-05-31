@@ -2,55 +2,103 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
 
-<BorderPane fx:id="smartCanvasPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="695.0" prefWidth="1097.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CanvasController">
+<BorderPane fx:id="smartCanvasPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="856.0" prefWidth="1411.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CanvasController">
    <right>
       <VBox prefHeight="533.0" prefWidth="260.0" spacing="5.0" style="-fx-background-color: DCDBDA;" BorderPane.alignment="CENTER">
          <children>
-            <AnchorPane prefHeight="49.0" prefWidth="158.0">
+            <Pane prefHeight="78.0" prefWidth="250.0">
                <children>
-                  <Label fx:id="changeUsername" layoutX="59.0" layoutY="6.0" text="User" />
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="52.0" layoutX="-3.0" layoutY="-3.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                  <Button fx:id="profileBtn" layoutX="140.0" layoutY="1.0" mnemonicParsing="false" style="-fx-background-color: E9EAEC;" text="Profile">
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets></Button>
-                  <Button fx:id="logout" layoutX="198.0" mnemonicParsing="false" style="-fx-background-color: E9EAEC;" text="Logout" />
-                  <ImageView fitHeight="45.0" fitWidth="53.0" layoutX="-3.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true" />
+                  <AnchorPane prefHeight="49.0" prefWidth="158.0">
+                     <children>
+                        <Label fx:id="changeUsername" layoutX="59.0" layoutY="6.0" text="User" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="52.0" layoutX="-3.0" layoutY="-3.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
+                        <Button fx:id="profileBtn" layoutX="140.0" layoutY="1.0" mnemonicParsing="false" style="-fx-background-color: E9EAEC;" text="Profile">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </Button>
+                        <Button fx:id="logout" layoutX="198.0" mnemonicParsing="false" style="-fx-background-color: E9EAEC;" text="Logout" />
+                        <ImageView fx:id="profilePicture" fitHeight="45.0" fitWidth="53.0" layoutX="-3.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </AnchorPane>
                </children>
-            </AnchorPane>
-            <GridPane>
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.866943359375" minWidth="10.0" prefWidth="83.301513671875" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="125.698486328125" minWidth="10.0" prefWidth="125.698486328125" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
+            </Pane>
+            <Pane prefHeight="574.0" prefWidth="250.0">
                <children>
-                  <Label text="Label" />
-                  <TextField GridPane.columnIndex="1" />
-                  <Label text="Label" GridPane.rowIndex="1" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <VBox fx:id="rectVbox" prefHeight="657.0" prefWidth="254.0" spacing="5.0" visible="false">
+                     <children>
+                        <Label text="Border colour" />
+                        <ChoiceBox prefWidth="150.0" />
+                        <Label text="Border width" />
+                        <TextField />
+                        <Line endX="144.7513885498047" endY="-0.41425931453704834" startX="-100.0" stroke="#727272" />
+                        <Label text="Background" />
+                        <ChoiceBox prefWidth="150.0" />
+                     </children>
+                  </VBox>
+                  <VBox fx:id="textVbox" prefHeight="655.0" prefWidth="254.0" spacing="5.0">
+                     <children>
+                        <Label text="Change Text" />
+                        <TextField fx:id="changeTextInput" promptText="Enter text" />
+                        <Label text="Font:" />
+                        <ChoiceBox fx:id="fontChoice" prefWidth="150.0" />
+                        <Label text="Font Size:" />
+                        <TextField fx:id="changeFontSize" promptText="Enter size" />
+                        <Label text="Attributes" />
+                        <Pane prefHeight="37.0" prefWidth="254.0">
+                           <children>
+                              <Button fx:id="textBold" layoutX="1.0" layoutY="6.0" mnemonicParsing="false" text="Bold" />
+                              <Button fx:id="textItalics" layoutX="53.0" layoutY="6.0" mnemonicParsing="false" text="Italics" />
+                           </children>
+                        </Pane>
+                        <Label text="Text Colour:" />
+                        <ColorPicker fx:id="textColourChoice">
+                           <value>
+                              <Color />
+                           </value>
+                        </ColorPicker>
+                        <Label text="Alignment:" />
+                        <Pane prefHeight="48.0" prefWidth="254.0">
+                           <children>
+                              <Button fx:id="textAlignLeft" layoutX="5.0" layoutY="8.0" mnemonicParsing="false" text="Left" />
+                              <Button fx:id="textAlignMiddle" layoutX="50.0" layoutY="9.0" mnemonicParsing="false" text="Middle" />
+                              <Button fx:id="textAlignRight" layoutX="108.0" layoutY="10.0" mnemonicParsing="false" text="Right" />
+                           </children>
+                        </Pane>
+                        <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
+                        <Label text="Border colour:" />
+                        <ColorPicker fx:id="textBorderColour" />
+                        <Label text="Border width:" />
+                        <TextField fx:id="textBorderWidth" />
+                        <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
+                        <Label text="Background:" />
+                        <ColorPicker fx:id="textBackground" />
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </VBox>
                </children>
-            </GridPane>
+            </Pane>
          </children>
          <opaqueInsets>
             <Insets />
@@ -101,8 +149,8 @@
    <bottom>
       <AnchorPane prefHeight="46.0" prefWidth="961.0" style="-fx-background-color: E9EAEC;" BorderPane.alignment="CENTER">
          <children>
-            <Slider fx:id="slider" layoutX="832.0" layoutY="16.0" max="200.0" prefHeight="16.0" prefWidth="164.0" value="100.0" />
-            <Label fx:id="zoomLabel" layoutX="994.0" layoutY="15.0" text="Zoom:  100%" />
+            <Slider fx:id="slider" layoutX="1115.0" layoutY="14.0" max="200.0" prefHeight="16.0" prefWidth="164.0" value="100.0" />
+            <Label fx:id="zoomLabel" layoutX="1277.0" layoutY="13.0" text="Zoom:  100%" />
             <Label fx:id="coordinates" layoutX="23.0" layoutY="14.0" text="Coordinates" />
          </children>
       </AnchorPane>

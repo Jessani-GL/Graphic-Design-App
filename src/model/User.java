@@ -5,6 +5,7 @@ public class User {
 	private String password;
 	private String firstName;
 	private String lastName;
+	private byte[] profileImage;
 
 	public User() {
 	}
@@ -14,6 +15,14 @@ public class User {
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
+	}
+	
+	public User(String username, String password, String firstName, String lastName, byte[] profileImage) {
+		this.username = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.profileImage = profileImage;
 	}
 
 	public String getUsername() {
@@ -46,6 +55,14 @@ public class User {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public byte[] getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(byte[] profileImage) {
+		this.profileImage = profileImage;
 	}
 	
 	

@@ -24,16 +24,16 @@
          </font>
       </Label>
       <Label prefHeight="17.0" prefWidth="250.0" text="Username" textFill="WHITE" />
-      <TextField fx:id="username" maxWidth="250.0">
+      <TextField fx:id="username" maxWidth="250.0" promptText="Enter username">
          <VBox.margin>
             <Insets bottom="5.0" />
          </VBox.margin></TextField>
       <Label prefHeight="17.0" prefWidth="250.0" text="First name" textFill="WHITE" />
-      <TextField fx:id="firstName" maxWidth="250.0" />
+      <TextField fx:id="firstName" maxWidth="250.0" promptText="Enter first name" />
       <Label prefHeight="17.0" prefWidth="250.0" text="Last name" textFill="WHITE" />
-      <TextField fx:id="lastName" maxWidth="250.0" />
+      <TextField fx:id="lastName" maxWidth="250.0" promptText="Enter last name" />
       <Label prefWidth="250.0" text="Password" textFill="WHITE" />
-      <PasswordField fx:id="password" maxWidth="250.0">
+      <PasswordField fx:id="password" maxWidth="250.0" promptText="Enter password">
          <VBox.margin>
             <Insets bottom="10.0" />
          </VBox.margin>
