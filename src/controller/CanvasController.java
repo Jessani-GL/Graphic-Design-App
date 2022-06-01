@@ -1,5 +1,9 @@
 package controller;
 
+import java.beans.DefaultPersistenceDelegate;
+import java.beans.Encoder;
+import java.beans.XMLEncoder;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,13 +11,20 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
-import javax.imageio.ImageIO;
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.RadialGradient;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -23,7 +34,6 @@ import javafx.scene.text.TextAlignment;
 import data.NewCanvasHolder;
 import data.SignupHolder;
 import data.UserInfoHolder;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
@@ -51,6 +61,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -81,6 +92,19 @@ public class CanvasController {
 	private MenuItem dropSaveAs;
 	@FXML
 	private MenuItem aboutMenu;
+	
+	// Tool buttons
+	@FXML
+	private Button textBtn;
+	@FXML
+	private Button rectBtn;
+	@FXML
+	private Button circleBtn;
+	@FXML
+	private Button imageBtn;
+	@FXML
+	private Button canvasBtn;
+	
 	// Changeable features
 	@FXML
 	private Label changeUsername;
@@ -97,16 +121,23 @@ public class CanvasController {
 	@FXML
 	private Button logout;
 
+	// Property Tabs
 	@FXML
 	private VBox textVbox;
 	@FXML
 	private VBox rectVbox;
+	@FXML
+	private VBox circleVbox;
+	@FXML
+	private VBox imageVbox;
+	@FXML
+	private VBox modifyCanvasVbox;
 
 	// Change Text Properties
 	@FXML
 	private TextField changeTextInput;
 	@FXML
-	private ChoiceBox<?> fontChoice;
+	private ChoiceBox<String> fontChoice;
 	@FXML
 	private TextField changeFontSize;
 	@FXML
@@ -117,19 +148,42 @@ public class CanvasController {
 	private ColorPicker textColourChoice;
 	@FXML
 	private Button textAlignLeft;
-
 	@FXML
 	private Button textAlignMiddle;
-
 	@FXML
 	private Button textAlignRight;
-
 	@FXML
 	private ColorPicker textBorderColour;
 	@FXML
 	private TextField textBorderWidth;
 	@FXML
 	private ColorPicker textBackground;
+
+	// Change Rectangle Properties
+	@FXML
+	private ColorPicker rectBorderColour;
+	@FXML
+	private TextField rectBorderWidth;
+	@FXML
+	private ColorPicker rectBgColour;
+
+	// Change Circle Properties
+	@FXML
+	private ColorPicker circleBorderColour;
+	@FXML
+	private TextField circleBorderWidth;
+	@FXML
+	private ColorPicker circleBgColour;
+
+	// Change Image Property
+	@FXML
+	private Button imgChangePath;
+
+	@FXML
+	private ColorPicker modifyCanvasChangeBg;
+
+	@FXML
+	private MenuItem deleteElement;
 
 	// Add new Canvas
 	private Pane canvas = new Pane();
@@ -144,6 +198,12 @@ public class CanvasController {
 
 	Text text;
 	Rectangle rectangle;
+	Circle circle;
+	ImageView addImage;
+
+	// Text Property Variables
+	private String[] fontFamilyList = { "Helvetica", "Arial", "Monospace", "Times New Roman", "Gill Sans", "Verdana",
+			"Serif", "San Serif" };
 
 	// DATA
 	private UserInfoHolder userInfoHolder = UserInfoHolder.getInstance();
@@ -166,7 +226,9 @@ public class CanvasController {
 		dropClearCanvas.setDisable(true);
 		dropSaveAs.setDisable(true);
 
-		changeTextProperties();
+		fontChoice.getItems().addAll(fontFamilyList);
+		fontChoice.getSelectionModel().select(0);
+
 		// ZOOM IN AND OUT FEATURE
 //		zoomInAndOut();
 
@@ -246,8 +308,15 @@ public class CanvasController {
 
 				// Get width and height information from another file for the new canvas
 				addANewCanvas(canvasHolder.getWidth(), canvasHolder.getHeight());
+				
 				dropClearCanvas.setDisable(false);
 				dropSaveAs.setDisable(false);
+				
+				textBtn.setDisable(false);
+				rectBtn.setDisable(false);
+				circleBtn.setDisable(false);
+				imageBtn.setDisable(false);
+				canvasBtn.setDisable(false);
 
 				System.out.println("yellow");
 			} catch (IOException e) {
@@ -257,9 +326,10 @@ public class CanvasController {
 		});
 
 		// CLEAR CANVAS
-//		dropClearCanvas.setOnAction(event -> {
+		dropClearCanvas.setOnAction(event -> {
 //			addANewCanvas(canvasHolder.getHeight(), canvasHolder.getWidth());
-//		});
+			canvas.getChildren().removeAll(text, rectangle, circle, addImage);
+		});
 		fileChooser.setSelectedExtensionFilter(new ExtensionFilter("images", "*.jpeg", "*.jpg", "*.png"));
 //		dropClearCanvas.setOnAction(new EventHandler<ActionEvent>() {
 //			
@@ -269,11 +339,19 @@ public class CanvasController {
 //	          }
 //		});
 
+		// SAVE AS
 		dropSaveAs.setOnAction(e -> {
-			File file = fileChooser.showSaveDialog(new Stage());
-			if (file != null) {
-				saveAs(file, canvas.getChildren());
+			try {
+				save();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
+//			saveAs();
+//			File file = fileChooser.showSaveDialog(new Stage());
+//			if (file != null) {
+//				saveAs();
+//			}
 		});
 
 		// ABOUT PAGE
@@ -305,6 +383,7 @@ public class CanvasController {
 			parentStage.show();
 		});
 
+		// ZOOM IN AND OUT
 		slider.valueProperty().addListener(new ChangeListener<Number>() {
 
 			@Override
@@ -336,36 +415,31 @@ public class CanvasController {
 		return profilePic;
 	}
 
-	public void saveAs(File file, Observable observableList) {
-//		try {
-//            PrintWriter printWriter = new PrintWriter(file);
-//            printWriter.write(observableList);
-//            printWriter.close();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
+	// CHANGE THIS CODE TO LOOK LIKE MINE
+	private static void addPersistenceDelegatesTo(Encoder encoder) {
+		encoder.setPersistenceDelegate(Font.class, new DefaultPersistenceDelegate(new String[] { "name", "size" }));
+		encoder.setPersistenceDelegate(Color.class,
+				new DefaultPersistenceDelegate(new String[] { "red", "green", "blue", "opacity" }));
+		encoder.setPersistenceDelegate(LinearGradient.class, new DefaultPersistenceDelegate(
+				new String[] { "startX", "startY", "endX", "endY", "proportional", "cycleMethod", "stops" }));
+		encoder.setPersistenceDelegate(RadialGradient.class, new DefaultPersistenceDelegate(new String[] { "focusAngle",
+				"focusDistance", "centerX", "centerY", "radius", "proportional", "cycleMethod", "stops" }));
 	}
 
-	public void captureAndSaveDisplay() {
-//	    FileChooser fileChooser = new FileChooser();
-//
-//	    //Set extension filter
-//	    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
-//
-//	    //Prompt user to select a file
-//	    File file = fileChooser.showSaveDialog(null);
-//
-//	    if(file != null){
-//	        try {
-//	            //Pad the capture area
-//	            WritableImage writableImage = new WritableImage((int)getWidth() + 20,
-//	                    (int)getHeight() + 20);
-//	            snapshot(null, writableImage);
-//	            RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
-//	            //Write the snapshot to the chosen file
-//	            ImageIO.write(renderedImage, "png", file);
-//	        } catch (IOException ex) { ex.printStackTrace(); }
-//	    }
+	private static final java.nio.file.Path SAVE_FILE_LOCATION = Paths.get(System.getProperty("user.home"),
+			"shapes.xml");
+
+	public void save() throws IOException {
+		try (XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(Files.newOutputStream(SAVE_FILE_LOCATION)))) {
+
+			encoder.setExceptionListener(e -> {
+				throw new RuntimeException(e);
+			});
+
+			addPersistenceDelegatesTo(encoder);
+
+			encoder.writeObject(canvas.getChildren().toArray(new Node[0]));
+		}
 	}
 
 	public void zoomInAndOut() {
@@ -374,25 +448,16 @@ public class CanvasController {
 		canvas.translateZProperty().set(canvas.getTranslateZ());
 	}
 
-//	@FXML
-	public void newCanvas(ActionEvent Event) {
-
-	}
-
-//	@FXML
-	public void newCanvas1(ActionEvent Event) {
-
-	}
-
 	private FlowPane flow;
 
-	
 	@FXML
 	public void addText(ActionEvent Event) {
 
 		textVbox.setVisible(true);
 		rectVbox.setVisible(false);
-		TextArea textArea = new TextArea("Drag me!");
+		circleVbox.setVisible(false);
+		imageVbox.setVisible(false);
+		modifyCanvasVbox.setVisible(false);
 
 		text = new Text();
 		flow = new FlowPane(text);
@@ -429,7 +494,7 @@ public class CanvasController {
 
 		});
 
-//		changeTextProperties();
+		changeTextProperties();
 
 		canvas.getChildren().add(flow);
 //		canvas.getChildren().add(redBorder);
@@ -447,6 +512,13 @@ public class CanvasController {
 				text.setText(input);
 
 			}
+		});
+
+		fontChoice.setOnAction(event -> {
+
+			String fontChoose = fontChoice.getValue();
+			text.setStyle("-fx-font-family: " + fontChoose + ";");
+
 		});
 
 		changeFontSize.setOnKeyPressed(event -> {
@@ -484,10 +556,85 @@ public class CanvasController {
 			text.setTextAlignment(TextAlignment.RIGHT);
 		});
 
-		Rectangle textBorder = new Rectangle(0, 0, Color.TRANSPARENT);
+//		Rectangle textBorder = new Rectangle(0, 0, Color.TRANSPARENT);
+//		
+//		textBorderColour.setOnAction(event -> {
+//			Color colour = textBorderColour.getValue();
+////			Rectangle textBorder = new Rectangle(0, 0, Color.TRANSPARENT);
+//			textBorder.setStroke(colour);
+//			textBorder.setManaged(false);
+//			text.boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
+//
+//				@Override
+//				public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
+//					textBorder.setLayoutX(text.getBoundsInParent().getMinX());
+//					textBorder.setLayoutY(text.getBoundsInParent().getMinY());
+//					textBorder.setWidth(text.getBoundsInParent().getWidth() + 5);
+//					textBorder.setHeight(text.getBoundsInParent().getHeight() + 5);
+//
+//				}
+//
+//			});
+//
+//			canvas.getChildren().add(textBorder);
+//			canvas.getChildren().forEach(this::makeDraggable);
+//		});
+
 		textBorderColour.setOnAction(event -> {
 			Color colour = textBorderColour.getValue();
-//			Rectangle textBorder = new Rectangle(0, 0, Color.TRANSPARENT);
+			text.setStroke(colour);
+		});
+
+		textBorderWidth.setOnKeyPressed(event -> {
+			if (event.getCode() == KeyCode.ENTER) {
+				String width = textBorderWidth.getText();
+				int borderWidth = Integer.parseInt(width);
+				text.setStrokeWidth(borderWidth);
+			}
+		});
+
+//		textBackground.setOnAction(event -> {
+//			Color colour = textBackground.getValue();
+//
+//			int r = ((int) Math.round(colour.getRed() * 255)) << 24;
+//			int g = ((int) Math.round(colour.getGreen() * 255)) << 16;
+//			int b1 = ((int) Math.round(colour.getBlue() * 255)) << 8;
+//			int a = ((int) Math.round(colour.getOpacity() * 255));
+//			String hexColour = String.format("#%08X", (r + g + b1 + a));
+////
+////			System.out.println(hexColour);
+////
+//////			text.setStyle("-fx-background-color: "+hexColour.toString()+";");
+//////			text.setStyle("-fx-background-color: "+hexColour+";"); //
+////			text.setStyle("-fx-background-color: #fdfdfd;");
+//
+//			final Bounds out = flow.getBoundsInLocal();
+//			final StringBuilder sbColors = new StringBuilder();
+//			final StringBuilder sbInsets = new StringBuilder();
+//			AtomicInteger cont = new AtomicInteger();
+//			flow.getChildrenUnmodifiable().forEach(n -> {
+//				sbColors.append("hsb(").append((((double) cont.get()) / ((double) flow.getChildren().size())) * 360d)
+//						.append(", 60%, 90%)");
+//				Bounds b = ((Text) n).getBoundsInParent();
+//				sbInsets.append(b.getMinY()).append(" ");
+//				sbInsets.append(Math.min(stage.getWidth(), out.getMaxX()) - b.getMaxX()).append(" ");
+//				sbInsets.append(Math.min(stage.getHeight(), out.getMaxY()) - b.getMaxY()).append(" ");
+//				sbInsets.append(b.getMinX());
+//				if (cont.getAndIncrement() < flow.getChildren().size() - 1) {
+//					sbColors.append(", ");
+//					sbInsets.append(", ");
+//				}
+//			});
+//			flow.setStyle("-fx-background-color: " + hexColour + ";");
+//			
+//			
+//		});
+
+		textBackground.setOnAction(event -> {
+
+			Color colour = textBackground.getValue();
+
+			Rectangle textBorder = new Rectangle(0, 0, colour);
 			textBorder.setStroke(colour);
 			textBorder.setManaged(false);
 			text.boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
@@ -503,66 +650,41 @@ public class CanvasController {
 
 			});
 
-			canvas.getChildren().add(textBorder);
-			canvas.getChildren().forEach(this::makeDraggable);
-		});
-
-		textBorderWidth.setOnAction(event -> {
-
-		});
-
-		textBackground.setOnAction(event -> {
-			Color colour = textBackground.getValue();
-
 			int r = ((int) Math.round(colour.getRed() * 255)) << 24;
 			int g = ((int) Math.round(colour.getGreen() * 255)) << 16;
 			int b1 = ((int) Math.round(colour.getBlue() * 255)) << 8;
 			int a = ((int) Math.round(colour.getOpacity() * 255));
 			String hexColour = String.format("#%08X", (r + g + b1 + a));
-//
-//			System.out.println(hexColour);
-//
-////			text.setStyle("-fx-background-color: "+hexColour.toString()+";");
-////			text.setStyle("-fx-background-color: "+hexColour+";"); //
-//			text.setStyle("-fx-background-color: #fdfdfd;");
-			
-			 final Bounds out = flow.getBoundsInLocal();
-			    final StringBuilder sbColors = new StringBuilder();
-			    final StringBuilder sbInsets = new StringBuilder();
-			    AtomicInteger cont = new AtomicInteger();
-			    flow.getChildrenUnmodifiable().forEach(n->{
-			        sbColors.append("hsb(")
-			                .append((((double)cont.get())/((double)flow.getChildren().size()))*360d)
-			                .append(", 60%, 90%)");
-			        Bounds b = ((Text)n).getBoundsInParent();
-			        sbInsets.append(b.getMinY()).append(" ");
-			        sbInsets.append(Math.min(stage.getWidth(),out.getMaxX())-b.getMaxX()).append(" ");
-			        sbInsets.append(Math.min(stage.getHeight(),out.getMaxY())-b.getMaxY()).append(" ");
-			        sbInsets.append(b.getMinX());
-			        if(cont.getAndIncrement()<flow.getChildren().size()-1){
-			            sbColors.append(", ");
-			            sbInsets.append(", ");
-			        }
-			    });
-			    flow.setStyle("-fx-background-color: "+hexColour+";");
+
+//			flow.setStyle("-fx-background-color: " + hexColour + ";");
+			canvas.getChildren().add(textBorder);
+			canvas.getChildren().forEach(this::makeDraggable);
+
 		});
+
+		deleteElement.setOnAction(event -> {
+			canvas.getChildren().remove(text);
+		});
+
 	}
 
 	@FXML
 	public void addRect(ActionEvent Event) {
 
-		rectVbox.setVisible(true);
 		textVbox.setVisible(false);
+		rectVbox.setVisible(true);
+		circleVbox.setVisible(false);
+		imageVbox.setVisible(false);
+		modifyCanvasVbox.setVisible(false);
 
 		rectangle = new Rectangle();
 		rectangle.setX(100);
 		rectangle.setY(100);
 		rectangle.setWidth(100);
 		rectangle.setHeight(100);
-//		rectangle.setStroke(Color.RED);
 		rectangle.setOpacity(10);
 		rectangle.setFill(Color.AQUAMARINE);
-		rectangle.setStrokeWidth(1);
+//		rectangle.setStrokeWidth(1);
 		changeRectProperties();
 
 		canvas.getChildren().add(rectangle);
@@ -571,33 +693,45 @@ public class CanvasController {
 	}
 
 	public void changeRectProperties() {
-		changeTextInput.setOnKeyPressed(event -> {
-			if (event.getCode() == KeyCode.ENTER) {
-				String input = changeTextInput.getText();
-				System.out.println(input);
-				text.setText(input);
 
+		rectBorderColour.setOnAction(event -> {
+			Color colour = rectBorderColour.getValue();
+			rectangle.setStroke(colour);
+		});
+
+		rectBorderWidth.setOnKeyPressed(event -> {
+			if (event.getCode() == KeyCode.ENTER) {
+				String width = rectBorderWidth.getText();
+				int borderWidth = Integer.parseInt(width);
+				rectangle.setStrokeWidth(borderWidth);
 			}
 		});
 
-		changeFontSize.setOnKeyPressed(event -> {
-			if (event.getCode() == KeyCode.ENTER) {
-				int fontSize = Integer.parseInt(changeFontSize.getText());
-				System.out.println(fontSize);
-				text.setFont(Font.font(fontSize));
+		rectBgColour.setOnAction(event -> {
+			Color colour = rectBgColour.getValue();
+			rectangle.setFill(colour);
+		});
 
-			}
+		deleteElement.setOnAction(event -> {
+			canvas.getChildren().remove(rectangle);
 		});
 	}
 
 	@FXML
 	public void addCircle(ActionEvent Event) {
+		textVbox.setVisible(false);
+		rectVbox.setVisible(false);
+		circleVbox.setVisible(true);
+		imageVbox.setVisible(false);
+		modifyCanvasVbox.setVisible(false);
 
-		Circle circle = new Circle();
+		circle = new Circle();
 		circle.setCenterX(350);
 		circle.setCenterY(350);
 		circle.setRadius(50);
 		circle.setFill(Color.AQUA);
+
+		changeCircleProperties();
 
 		canvas.getChildren().add(circle);
 		canvas.getChildren().forEach(this::makeDraggable);
@@ -606,10 +740,40 @@ public class CanvasController {
 
 	}
 
+	public void changeCircleProperties() {
+		circleBorderColour.setOnAction(event -> {
+			Color colour = circleBorderColour.getValue();
+			circle.setStroke(colour);
+		});
+
+		circleBorderWidth.setOnKeyPressed(event -> {
+			if (event.getCode() == KeyCode.ENTER) {
+				String width = circleBorderWidth.getText();
+				int borderWidth = Integer.parseInt(width);
+				circle.setStrokeWidth(borderWidth);
+			}
+		});
+
+		circleBgColour.setOnAction(event -> {
+			Color colour = circleBgColour.getValue();
+			circle.setFill(colour);
+		});
+
+		deleteElement.setOnAction(event -> {
+			canvas.getChildren().remove(circle);
+		});
+
+	}
+
 	@FXML
 	public void addImage(ActionEvent Event) {
+		textVbox.setVisible(false);
+		rectVbox.setVisible(false);
+		circleVbox.setVisible(false);
+		imageVbox.setVisible(true);
+		modifyCanvasVbox.setVisible(false);
 
-		ImageView addImage = new ImageView();
+		addImage = new ImageView();
 		addImage.setX(100);
 		addImage.setY(100);
 		FileChooser fileChooser = new FileChooser();
@@ -626,8 +790,73 @@ public class CanvasController {
 			e.printStackTrace();
 
 		}
+
+		changeImageProperties();
 		canvas.getChildren().add(addImage);
 		canvas.getChildren().forEach(this::makeDraggable);
+
+	}
+
+	public void changeImageProperties() {
+
+		imgChangePath.setOnAction(event -> {
+
+			fileChooser.setSelectedExtensionFilter(new ExtensionFilter("images", "*.jpeg", "*.jpg", "*.png"));
+
+			File selectedFile = fileChooser.showOpenDialog(stage);
+
+			try {
+				FileInputStream fileInputStream = new FileInputStream(selectedFile);
+				addImage.setImage(new Image(fileInputStream));
+
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+
+			}
+		});
+
+		deleteElement.setOnAction(event -> {
+			canvas.getChildren().remove(addImage);
+		});
+	}
+
+	@FXML
+	public void modifyCanvas(ActionEvent Event) {
+
+		textVbox.setVisible(false);
+		rectVbox.setVisible(false);
+		circleVbox.setVisible(false);
+		imageVbox.setVisible(false);
+		modifyCanvasVbox.setVisible(true);
+
+//		canvas = new Pane();
+//		Scene newScene1 = new Scene(canvas);
+//		canvas.setStyle("-fx-background-color: gray;");
+////		canvas2.setPrefSize(200, 200);
+//		canvas.setMaxHeight(500);
+//		canvas.setMaxWidth(500);
+//		smartCanvasPane.setCenter(canvas);
+
+		modifyCanvasChangeBg.setOnAction(event -> {
+			Color colour = modifyCanvasChangeBg.getValue();
+			canvas.setBackground(new Background(new BackgroundFill(colour, CornerRadii.EMPTY, Insets.EMPTY)));
+		});
+
+//		Rectangle rectangle = new Rectangle();
+//		rectangle.setX(100);
+//		rectangle.setY(100);
+//		rectangle.setWidth(100);
+//		rectangle.setHeight(100);
+//		rectangle.setStroke(Color.RED);
+//		rectangle.setOpacity(10);
+//		rectangle.setFill(Color.AQUAMARINE);
+//		rectangle.setStrokeWidth(1);
+//		
+//		canvas2.getChildren().add(rectangle);
+
+//		smartCanvasPane.setCenter(canvas2);
+
+		System.out.println("bruh");
 
 	}
 
@@ -648,45 +877,6 @@ public class CanvasController {
 			double dragPointY = e.getY();
 			coordinates.setText("x: " + dragPointX + " y: " + dragPointY);
 		});
-
-	}
-
-	@FXML
-	public void modifyCanvas(ActionEvent Event) {
-
-//		What do I put here?
-
-//		Scene newScene1 = new Scene(smartCanvasPane, 1140, 738);
-//		//
-//		Pane canvas2 = new Pane();
-//		canvas2.setStyle("-fx-background-color: black;");
-//		canvas2.setPrefSize(200, 200);
-//		smartCanvasPane.setCenter(canvas2);
-//		stage.setScene(newScene1);
-//		
-
-		canvas = new Pane();
-		Scene newScene1 = new Scene(canvas);
-		canvas.setStyle("-fx-background-color: gray;");
-//		canvas2.setPrefSize(200, 200);
-		canvas.setMaxHeight(500);
-		canvas.setMaxWidth(500);
-		smartCanvasPane.setCenter(canvas);
-//		Rectangle rectangle = new Rectangle();
-//		rectangle.setX(100);
-//		rectangle.setY(100);
-//		rectangle.setWidth(100);
-//		rectangle.setHeight(100);
-//		rectangle.setStroke(Color.RED);
-//		rectangle.setOpacity(10);
-//		rectangle.setFill(Color.AQUAMARINE);
-//		rectangle.setStrokeWidth(1);
-//		
-//		canvas2.getChildren().add(rectangle);
-
-//		smartCanvasPane.setCenter(canvas2);
-
-		System.out.println("bruh");
 
 	}
 

@@ -18,8 +18,8 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
-<?import javafx.scene.shape.Line?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane fx:id="smartCanvasPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="856.0" prefWidth="1411.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CanvasController">
    <right>
@@ -46,16 +46,28 @@
                <children>
                   <VBox fx:id="rectVbox" prefHeight="657.0" prefWidth="254.0" spacing="5.0" visible="false">
                      <children>
-                        <Label text="Border colour" />
-                        <ChoiceBox prefWidth="150.0" />
-                        <Label text="Border width" />
-                        <TextField />
-                        <Line endX="144.7513885498047" endY="-0.41425931453704834" startX="-100.0" stroke="#727272" />
+                        <Label text="Edit Rectangle">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label text="Border Colour:" />
+                        <ColorPicker fx:id="rectBorderColour" />
+                        <Label text="Border width:" />
+                        <TextField fx:id="rectBorderWidth" />
+                        <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
                         <Label text="Background" />
-                        <ChoiceBox prefWidth="150.0" />
+                        <ColorPicker fx:id="rectBgColour">
+                           <value>
+                              <Color red="0.6305000185966492" green="0.9621018171310425" blue="0.9700000286102295" />
+                           </value>
+                        </ColorPicker>
                      </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
                   </VBox>
-                  <VBox fx:id="textVbox" prefHeight="655.0" prefWidth="254.0" spacing="5.0">
+                  <VBox fx:id="textVbox" prefHeight="655.0" prefWidth="254.0" spacing="5.0" visible="false">
                      <children>
                         <Label text="Change Text" />
                         <TextField fx:id="changeTextInput" promptText="Enter text" />
@@ -97,6 +109,47 @@
                         <Insets left="10.0" right="10.0" />
                      </padding>
                   </VBox>
+                  <VBox fx:id="circleVbox" prefHeight="566.0" prefWidth="248.0" spacing="5.0" visible="false">
+                     <children>
+                        <Label text="Edit Circle">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label text="Border Colour:" />
+                        <ColorPicker fx:id="circleBorderColour" />
+                        <Label text="Border width:" />
+                        <TextField fx:id="circleBorderWidth" />
+                        <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
+                        <Label text="Background" />
+                        <ColorPicker fx:id="circleBgColour">
+                           <value>
+                              <Color red="0.6310915946960449" green="0.8480669260025024" blue="0.9736841917037964" />
+                           </value>
+                        </ColorPicker>
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="imageVbox" prefHeight="208.0" prefWidth="241.0" spacing="5.0" visible="false">
+                     <children>
+                        <Label text="Image:" />
+                        <Button fx:id="imgChangePath" mnemonicParsing="false" prefHeight="26.0" prefWidth="160.0" text="Change path" />
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="modifyCanvasVbox" prefHeight="201.0" prefWidth="258.0" spacing="5.0" visible="false">
+                     <children>
+                        <Label text="Background:" />
+                        <ColorPicker fx:id="modifyCanvasChangeBg" />
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </VBox>
                </children>
             </Pane>
          </children>
@@ -113,7 +166,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem fx:id="dropNewCanvas" mnemonicParsing="false" onAction="#newCanvas" text="New Canvas" />
+              <MenuItem fx:id="dropNewCanvas" mnemonicParsing="false" text="New Canvas" />
                   <MenuItem fx:id="dropClearCanvas" disable="true" mnemonicParsing="false" text="Clear Canvas" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="dropSaveAs" disable="true" mnemonicParsing="false" text="Save As..." />
@@ -121,7 +174,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem fx:id="deleteElement" mnemonicParsing="false" text="Delete Element" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -135,11 +188,11 @@
    <left>
       <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: DCDBDA;" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" onAction="#addText" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: #E9EAEC;" text="Text" />
-            <Button mnemonicParsing="false" onAction="#addRect" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Rect" />
-            <Button mnemonicParsing="false" onAction="#addCircle" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Circle" />
-            <Button mnemonicParsing="false" onAction="#addImage" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Image" />
-            <Button mnemonicParsing="false" onAction="#modifyCanvas" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Canvas" />
+            <Button fx:id="textBtn" disable="true" mnemonicParsing="false" onAction="#addText" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: #E9EAEC;" text="Text" />
+            <Button fx:id="rectBtn" disable="true" mnemonicParsing="false" onAction="#addRect" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Rect" />
+            <Button fx:id="circleBtn" disable="true" mnemonicParsing="false" onAction="#addCircle" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Circle" />
+            <Button fx:id="imageBtn" disable="true" mnemonicParsing="false" onAction="#addImage" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Image" />
+            <Button fx:id="canvasBtn" disable="true" mnemonicParsing="false" onAction="#modifyCanvas" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Canvas" />
          </children>
          <padding>
             <Insets left="5.0" top="5.0" />
