@@ -1,100 +1,219 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.embed.swing.SwingNode?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="526.0" prefWidth="921.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SmartCanvasController">
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="209.0" minWidth="7.0" prefWidth="83.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="601.0" minWidth="300.0" prefWidth="562.0" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="282.0" minWidth="10.0" prefWidth="282.0" />
-  </columnConstraints>
-  <rowConstraints>
-      <RowConstraints maxHeight="115.0" minHeight="0.0" prefHeight="56.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="435.0" minHeight="10.0" prefHeight="430.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-  </rowConstraints>
-   <children>
-      <MenuBar prefHeight="53.0" prefWidth="637.0" GridPane.columnSpan="2">
+<BorderPane fx:id="smartCanvasPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="856.0" prefWidth="1411.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CanvasController">
+   <right>
+      <VBox prefHeight="533.0" prefWidth="260.0" spacing="5.0" style="-fx-background-color: DCDBDA;" BorderPane.alignment="CENTER">
+         <children>
+            <Pane prefHeight="78.0" prefWidth="250.0">
+               <children>
+                  <AnchorPane prefHeight="49.0" prefWidth="158.0">
+                     <children>
+                        <Label fx:id="changeUsername" layoutX="59.0" layoutY="6.0" text="User" />
+                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="48.0" layoutX="-3.0" layoutY="1.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
+                        <Button fx:id="profileBtn" layoutX="140.0" layoutY="1.0" mnemonicParsing="false" style="-fx-background-color: E9EAEC;" text="Profile">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </Button>
+                        <Button fx:id="logout" layoutX="198.0" mnemonicParsing="false" style="-fx-background-color: E9EAEC;" text="Logout" />
+                        <ImageView fx:id="profilePicture" fitHeight="53.0" fitWidth="55.0" layoutX="-3.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../img/Screen%20Shot%202022-06-01%20at%2010.26.01%20pm.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </Pane>
+            <Pane prefHeight="574.0" prefWidth="250.0">
+               <children>
+                  <VBox fx:id="rectVbox" prefHeight="657.0" prefWidth="254.0" spacing="5.0">
+                     <children>
+                        <Label text="Edit Rectangle">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label text="Border Colour:" />
+                        <ColorPicker fx:id="rectBorderColour" style="-fx-background-color: f0f0f0;" />
+                        <Label text="Border width:" />
+                        <TextField fx:id="rectBorderWidth" />
+                        <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
+                        <Label text="Background" />
+                        <ColorPicker fx:id="rectBgColour" style="-fx-background-color: f0f0f0;">
+                           <value>
+                              <Color red="0.6305000185966492" green="0.9621018171310425" blue="0.9700000286102295" />
+                           </value>
+                        </ColorPicker>
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="textVbox" prefHeight="655.0" prefWidth="254.0" spacing="5.0" visible="false">
+                     <children>
+                        <Label prefWidth="234.0" text="Note: For textfields, press 'enter' key to" textFill="#403e3e" />
+                        <Label text=" confirm changes" textFill="#403e3e" />
+                        <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
+                        <Label text="Change Text" />
+                        <TextField fx:id="changeTextInput" promptText="Enter text" />
+                        <Label text="Font:" />
+                        <ChoiceBox fx:id="fontChoice" prefWidth="150.0" style="-fx-background-color: f0f0f0;" />
+                        <Label text="Font Size:" />
+                        <TextField fx:id="changeFontSize" promptText="Enter size" />
+                        <Label text="Attributes" />
+                        <Pane prefHeight="37.0" prefWidth="254.0">
+                           <children>
+                              <Button fx:id="textBold" layoutX="1.0" layoutY="6.0" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Bold" />
+                              <Button fx:id="textItalics" layoutX="53.0" layoutY="6.0" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Italics" />
+                           </children>
+                        </Pane>
+                        <Label text="Text Colour:" />
+                        <ColorPicker fx:id="textColourChoice" style="-fx-background-color: f0f0f0;">
+                           <value>
+                              <Color />
+                           </value>
+                        </ColorPicker>
+                        <Label text="Alignment:" />
+                        <Pane prefHeight="48.0" prefWidth="254.0">
+                           <children>
+                              <Button fx:id="textAlignLeft" layoutX="5.0" layoutY="8.0" mnemonicParsing="false" text="Left" />
+                              <Button fx:id="textAlignMiddle" layoutX="50.0" layoutY="9.0" mnemonicParsing="false" text="Middle" />
+                              <Button fx:id="textAlignRight" layoutX="108.0" layoutY="10.0" mnemonicParsing="false" text="Right" />
+                           </children>
+                        </Pane>
+                        <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
+                        <Label text="Border colour:" />
+                        <ColorPicker fx:id="textBorderColour" style="-fx-background-color: f0f0f0;" />
+                        <Label text="Border width:" />
+                        <TextField fx:id="textBorderWidth" />
+                        <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
+                        <Label text="Background:" />
+                        <ColorPicker fx:id="textBackground" style="-fx-background-color: f0f0f0;" />
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="circleVbox" prefHeight="566.0" prefWidth="248.0" spacing="5.0" visible="false">
+                     <children>
+                        <Label text="Edit Circle">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label text="Border Colour:" />
+                        <ColorPicker fx:id="circleBorderColour" style="-fx-background-color: f0f0f0;" />
+                        <Label text="Border width:" />
+                        <TextField fx:id="circleBorderWidth" />
+                        <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
+                        <Label text="Background" />
+                        <ColorPicker fx:id="circleBgColour" style="-fx-background-color: f0f0f0;">
+                           <value>
+                              <Color red="0.6310915946960449" green="0.8480669260025024" blue="0.9736841917037964" />
+                           </value>
+                        </ColorPicker>
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="imageVbox" prefHeight="208.0" prefWidth="241.0" spacing="5.0" visible="false">
+                     <children>
+                        <Label text="Image:" />
+                        <Button fx:id="imgChangePath" mnemonicParsing="false" prefHeight="26.0" prefWidth="160.0" style="-fx-background-color: f0f0f0;" text="Change path" />
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="modifyCanvasVbox" prefHeight="201.0" prefWidth="258.0" spacing="5.0" visible="false">
+                     <children>
+                        <Label text="Background:" />
+                        <ColorPicker fx:id="modifyCanvasChangeBg" style="-fx-background-color: f0f0f0;" />
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </Pane>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets left="5.0" right="5.0" />
+         </padding>
+      </VBox>
+   </right>
+   <top>
+      <MenuBar style="-fx-background-color: E9EAEC;" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem fx:id="dropNewCanvas" mnemonicParsing="false" text="New Canvas" />
+                  <MenuItem fx:id="dropClearCanvas" disable="true" mnemonicParsing="false" text="Clear Canvas" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="dropSaveAs" disable="true" mnemonicParsing="false" text="Save As..." />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem fx:id="deleteElement" mnemonicParsing="false" text="Delete Element" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem fx:id="aboutMenu" mnemonicParsing="false" text="About" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
-      <SwingNode GridPane.columnSpan="2" />
-      <SwingNode GridPane.columnIndex="1" GridPane.columnSpan="2" />
-      <ImageView fx:id="displayPFP" fitHeight="55.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
-      <Label text="User" GridPane.columnIndex="2">
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-         <GridPane.margin>
-            <Insets left="70.0" />
-         </GridPane.margin>
-      </Label>
-      <Button mnemonicParsing="false" text="Profile" GridPane.columnIndex="2">
-         <GridPane.margin>
-            <Insets left="145.0" />
-         </GridPane.margin>
-      </Button>
-      <Button mnemonicParsing="false" text="Log out" GridPane.columnIndex="2">
-         <GridPane.margin>
-            <Insets left="211.0" />
-         </GridPane.margin>
-      </Button>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d9d9da" height="437.0" stroke="#a1a1a1" strokeType="INSIDE" width="83.0" GridPane.rowIndex="1" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d9d9da" height="433.0" stroke="#a1a1a1" strokeType="INSIDE" width="283.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#d9d9da" height="35.0" stroke="#a1a1a1" strokeType="INSIDE" width="646.0" GridPane.rowIndex="2" />
-      <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #1212;" text="Text" GridPane.rowIndex="1">
-         <GridPane.margin>
-            <Insets bottom="330.0" left="6.0" />
-         </GridPane.margin>
-      </Button>
-      <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #1212;" text="Image" GridPane.rowIndex="1">
-         <GridPane.margin>
-            <Insets bottom="170.0" left="6.0" />
-         </GridPane.margin>
-      </Button>
-      <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #1212;" text="Rect" GridPane.rowIndex="1">
-         <GridPane.margin>
-            <Insets bottom="15.0" left="6.0" />
-         </GridPane.margin>
-      </Button>
-      <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #1212;" text="Cricle" GridPane.rowIndex="1">
-         <GridPane.margin>
-            <Insets left="6.0" top="140.0" />
-         </GridPane.margin>
-      </Button>
-      <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" style="-fx-background-color: #1212;" text="Canvas" GridPane.rowIndex="1">
-         <GridPane.margin>
-            <Insets left="6.0" top="300.0" />
-         </GridPane.margin>
-      </Button>
-      <SwingNode GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Canvas height="358.0" width="532.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-   </children>
-</GridPane>
+   </top>
+   <left>
+      <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" style="-fx-background-color: DCDBDA;" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="textBtn" disable="true" mnemonicParsing="false" onAction="#addText" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: #E9EAEC;" text="Text" />
+            <Button fx:id="rectBtn" disable="true" mnemonicParsing="false" onAction="#addRect" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Rect" />
+            <Button fx:id="circleBtn" disable="true" mnemonicParsing="false" onAction="#addCircle" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Circle" />
+            <Button fx:id="imageBtn" disable="true" mnemonicParsing="false" onAction="#addImage" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Image" />
+            <Button fx:id="canvasBtn" disable="true" mnemonicParsing="false" onAction="#modifyCanvas" prefHeight="71.0" prefWidth="86.0" style="-fx-background-color: E9EAEC;" text="Canvas" />
+         </children>
+         <padding>
+            <Insets left="5.0" top="5.0" />
+         </padding>
+      </VBox>
+   </left>
+   <bottom>
+      <AnchorPane prefHeight="46.0" prefWidth="961.0" style="-fx-background-color: E9EAEC;" BorderPane.alignment="CENTER">
+         <children>
+            <Slider fx:id="slider" layoutX="1115.0" layoutY="14.0" max="200.0" prefHeight="16.0" prefWidth="164.0" value="100.0" />
+            <Label fx:id="zoomLabel" layoutX="1277.0" layoutY="13.0" text="Zoom:  100%" />
+            <Label fx:id="coordinates" layoutX="23.0" layoutY="14.0" text="Coordinates" />
+         </children>
+      </AnchorPane>
+   </bottom>
+</BorderPane>

@@ -13,7 +13,7 @@
 
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="400.0" spacing="10.0" style="-fx-background-color: #171717;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SignupController">
    <children>
-      <ImageView fx:id="changeImage" fitHeight="97.0" fitWidth="111.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="changeImage" fitHeight="97.0" fitWidth="111.0" onMouseClicked="#changeProfileImage" pickOnBounds="true" preserveRatio="true">
          <effect>
             <DropShadow />
          </effect>
@@ -24,16 +24,16 @@
          </font>
       </Label>
       <Label prefHeight="17.0" prefWidth="250.0" text="Username" textFill="WHITE" />
-      <TextField fx:id="username" maxWidth="250.0">
+      <TextField fx:id="username" maxWidth="250.0" promptText="Enter username">
          <VBox.margin>
             <Insets bottom="5.0" />
          </VBox.margin></TextField>
       <Label prefHeight="17.0" prefWidth="250.0" text="First name" textFill="WHITE" />
-      <TextField fx:id="username1" maxWidth="250.0" />
+      <TextField fx:id="firstName" maxWidth="250.0" promptText="Enter first name" />
       <Label prefHeight="17.0" prefWidth="250.0" text="Last name" textFill="WHITE" />
-      <TextField fx:id="username11" maxWidth="250.0" />
+      <TextField fx:id="lastName" maxWidth="250.0" promptText="Enter last name" />
       <Label prefWidth="250.0" text="Password" textFill="WHITE" />
-      <PasswordField fx:id="password" maxWidth="250.0">
+      <PasswordField fx:id="password" maxWidth="250.0" promptText="Enter password">
          <VBox.margin>
             <Insets bottom="10.0" />
          </VBox.margin>
