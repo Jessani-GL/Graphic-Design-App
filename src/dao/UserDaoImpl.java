@@ -51,7 +51,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public User getUser(String username, String password, String firstName, String lastName, byte[] profileImage) throws SQLException {
+	public User getUserAll(String username, String password, String firstName, String lastName, byte[] profileImage) throws SQLException {
 //		String sql = "SELECT * FROM " + TABLE_NAME + " WHERE username = ? AND password = ? AND firstName = ? AND lastName = ? AND profileImage = ?";
 		String sql = "SELECT * FROM " + TABLE_NAME + " WHERE username = ? AND password = ?";
 		try (Connection connection = Database.getConnection(); 

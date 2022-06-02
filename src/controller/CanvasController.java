@@ -31,8 +31,10 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import data.NewCanvasHolder;
 import data.SignupHolder;
+import data.TextPropertiesHolder;
 import data.UserInfoHolder;
 import javafx.scene.control.TextField;
 import javafx.beans.Observable;
@@ -202,13 +204,14 @@ public class CanvasController {
 	ImageView addImage;
 
 	// Text Property Variables
-	private String[] fontFamilyList = { "Helvetica", "Arial", "Monospace", "Times New Roman", "Gill Sans", "Verdana",
+	private String[] fontFamilyList = { "Arial", "Monospace", "Times New Roman", "Gill Sans", "Verdana",
 			"Serif", "San Serif" };
 
 	// DATA
 	private UserInfoHolder userInfoHolder = UserInfoHolder.getInstance();
 	private NewCanvasHolder canvasHolder = NewCanvasHolder.getInstance();
 	private SignupHolder signupHolder = SignupHolder.getInstance();
+	private TextPropertiesHolder textHolder = TextPropertiesHolder.getInstance();
 	private User user;
 
 	private Stage stage;
@@ -228,7 +231,15 @@ public class CanvasController {
 
 		fontChoice.getItems().addAll(fontFamilyList);
 		fontChoice.getSelectionModel().select(0);
+		changeTextInput.setText("Text");
+		changeFontSize.setText("11");
 
+		User user;
+		user = model.getCurrentUser();
+//		changeUsername = new Label();
+		System.out.println(user.getFirstName());
+		changeUsername.setText(user.getFirstName());
+		
 		// ZOOM IN AND OUT FEATURE
 //		zoomInAndOut();
 
@@ -241,7 +252,7 @@ public class CanvasController {
 //		Image profileImage = convertProfileImage(user.getProfileImage());
 //		profilePicture.setImage(profileImage);
 //		
-///////////
+///////////s
 //		
 ////		changeUsername.setText(userInfoHolder.getFirstName() + " " + userInfoHolder.getLastName());
 ///////////
@@ -329,6 +340,7 @@ public class CanvasController {
 		dropClearCanvas.setOnAction(event -> {
 //			addANewCanvas(canvasHolder.getHeight(), canvasHolder.getWidth());
 			canvas.getChildren().removeAll(text, rectangle, circle, addImage);
+			canvas.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 		});
 		fileChooser.setSelectedExtensionFilter(new ExtensionFilter("images", "*.jpeg", "*.jpg", "*.png"));
 //		dropClearCanvas.setOnAction(new EventHandler<ActionEvent>() {
@@ -399,9 +411,7 @@ public class CanvasController {
 
 	public void addANewCanvas(Double width, Double height) {
 		canvas = new Pane();
-		Scene newScene1 = new Scene(canvas);
 		canvas.setStyle("-fx-background-color: white;");
-//		canvas2.setPrefSize(200, 200);
 		canvas.setMaxHeight(height);
 		canvas.setMaxWidth(width);
 		canvas.setEffect(new DropShadow());
@@ -459,9 +469,11 @@ public class CanvasController {
 		imageVbox.setVisible(false);
 		modifyCanvasVbox.setVisible(false);
 
+		
 		text = new Text();
+		text.setFont(Font.font("Arial", FontPosture.REGULAR, 11));
 		flow = new FlowPane(text);
-		text.setText("Hello");
+		text.setText("Text");
 		text.setX(50);
 		text.setY(50);
 //		text.setOnMouseEntered(e -> {
@@ -498,13 +510,15 @@ public class CanvasController {
 
 		canvas.getChildren().add(flow);
 //		canvas.getChildren().add(redBorder);
+		
 		canvas.getChildren().add(text);
-
 		canvas.getChildren().forEach(this::makeDraggable);
 
 	}
 
+	
 	public void changeTextProperties() {
+		
 		changeTextInput.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
 				String input = changeTextInput.getText();
@@ -518,15 +532,17 @@ public class CanvasController {
 
 			String fontChoose = fontChoice.getValue();
 			text.setStyle("-fx-font-family: " + fontChoose + ";");
+			textHolder.setfFamily(fontChoose);
 
 		});
 
 		changeFontSize.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
+				
 				int fontSize = Integer.parseInt(changeFontSize.getText());
 				System.out.println(fontSize);
 				text.setFont(Font.font(fontSize));
-
+				textHolder.setfSize(fontSize);
 			}
 		});
 
@@ -536,24 +552,45 @@ public class CanvasController {
 		});
 
 		textBold.setOnAction(event -> {
-			text.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+//			text.setStyle("-fx-font-weight:" + FontWeight.BOLD+ ";");
+			
+			text.setFont(Font.font(textHolder.getfFamily(), FontWeight.EXTRA_BOLD, textHolder.getfSize()));
 		});
 
 		textItalics.setOnAction(event -> {
-			text.setFont(Font.font("Verdana", FontPosture.ITALIC, 20));
+			text.setFont(Font.font(textHolder.getfFamily(), FontPosture.ITALIC, textHolder.getfSize()));
+//			text.setFont(Font.font("Verdana", FontPosture.ITALIC, 20));
 		});
 
 		textAlignLeft.setOnAction(event -> {
-			text.setTextAlignment(TextAlignment.LEFT);
+//			text.setTextAlignment(TextAlignment.LEFT);
+			TextFlow text_flow = new TextFlow();
+			text_flow.getChildren().add(text);
+			canvas.getChildren().add(text_flow);
+			text_flow.setTextAlignment(TextAlignment.LEFT);
 
 		});
 
 		textAlignMiddle.setOnAction(event -> {
-			text.setTextAlignment(TextAlignment.CENTER);
+			TextFlow text_flow = new TextFlow();
+			text_flow.getChildren().add(text);
+//			canvas.getChildren().add(text_flow);
+			text_flow.setTextAlignment(TextAlignment.CENTER);
+			VBox vbox = new VBox(text_flow);
+			  
+            // set alignment of vbox
+            vbox.setAlignment(Pos.CENTER);
+            canvas.getChildren().add(vbox);
+//			text.setTextAlignment(TextAlignment.CENTER);
+			 
 		});
 
 		textAlignRight.setOnAction(event -> {
-			text.setTextAlignment(TextAlignment.RIGHT);
+//			text.setTextAlignment(TextAlignment.RIGHT);
+			TextFlow text_flow = new TextFlow();
+			text_flow.getChildren().add(text);
+			canvas.getChildren().add(text_flow);
+			text_flow.setTextAlignment(TextAlignment.RIGHT);
 		});
 
 //		Rectangle textBorder = new Rectangle(0, 0, Color.TRANSPARENT);
@@ -840,6 +877,7 @@ public class CanvasController {
 		modifyCanvasChangeBg.setOnAction(event -> {
 			Color colour = modifyCanvasChangeBg.getValue();
 			canvas.setBackground(new Background(new BackgroundFill(colour, CornerRadii.EMPTY, Insets.EMPTY)));
+			
 		});
 
 //		Rectangle rectangle = new Rectangle();

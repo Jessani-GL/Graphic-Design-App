@@ -96,7 +96,11 @@ public class SignupController {
 							lastName.getText(), profileData);
 					if (user != null) {
 //						status.setText("Created " + user.getUsername());
-
+//						user.setFirstName(firstName.getText());
+//						user.setLastName(lastName.getText());
+						
+//						model.setCurrentUser(user);
+						
 //						status.setTextFill(Color.GREEN);
 						UserInfoHolder holder = UserInfoHolder.getInstance();
 						holder.setFirstName(user.getFirstName());
