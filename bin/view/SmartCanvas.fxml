@@ -26,21 +26,21 @@
    <right>
       <VBox prefHeight="533.0" prefWidth="260.0" spacing="5.0" style="-fx-background-color: DCDBDA;" BorderPane.alignment="CENTER">
          <children>
-            <Pane prefHeight="78.0" prefWidth="250.0">
+            <Pane prefHeight="56.0" prefWidth="250.0">
                <children>
                   <AnchorPane prefHeight="49.0" prefWidth="158.0">
                      <children>
                         <Label fx:id="changeUsername" layoutX="59.0" layoutY="6.0" text="User" />
                         <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="48.0" layoutX="-3.0" layoutY="1.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
-                        <Button fx:id="profileBtn" layoutX="140.0" layoutY="1.0" mnemonicParsing="false" style="-fx-background-color: E9EAEC;" text="Profile">
+                        <Button fx:id="profileBtn" layoutX="134.0" layoutY="1.0" mnemonicParsing="false" style="-fx-background-color: E9EAEC;" text="Profile">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
                         </Button>
-                        <Button fx:id="logout" layoutX="198.0" mnemonicParsing="false" style="-fx-background-color: E9EAEC;" text="Logout" />
+                        <Button fx:id="logout" layoutX="191.0" layoutY="1.0" mnemonicParsing="false" style="-fx-background-color: E9EAEC;" text="Logout" />
                         <ImageView fx:id="profilePicture" fitHeight="53.0" fitWidth="55.0" layoutX="-3.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../img/Screen%20Shot%202022-06-01%20at%2010.26.01%20pm.png" />
+                              <Image url="@../../img/penguin.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -49,7 +49,7 @@
             </Pane>
             <Pane prefHeight="574.0" prefWidth="250.0">
                <children>
-                  <VBox fx:id="rectVbox" prefHeight="657.0" prefWidth="254.0" spacing="5.0">
+                  <VBox fx:id="rectVbox" prefHeight="657.0" prefWidth="254.0" spacing="5.0" visible="false">
                      <children>
                         <Label text="Edit Rectangle">
                            <font>
@@ -60,6 +60,17 @@
                         <ColorPicker fx:id="rectBorderColour" style="-fx-background-color: f0f0f0;" />
                         <Label text="Border width:" />
                         <TextField fx:id="rectBorderWidth" />
+                        <Label text="Resize:" />
+                        <Pane prefHeight="80.0" prefWidth="234.0">
+                           <children>
+                              <Label layoutX="11.0" layoutY="6.0" text="width" />
+                              <Label layoutX="9.0" layoutY="40.0" text="height" />
+                              <TextField fx:id="rectangleWidth" layoutX="72.0" layoutY="2.0" prefHeight="26.0" prefWidth="136.0" promptText="enter width" text="100" />
+                              <TextField fx:id="rectangleHeight" layoutX="71.0" layoutY="36.0" prefHeight="26.0" prefWidth="136.0" promptText="enter height" text="100" />
+                           </children>
+                        </Pane>
+                        <Label text="Rectangle Rotate:" />
+                        <Button fx:id="rectangleRotate" mnemonicParsing="false" text="Rotate" />
                         <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
                         <Label text="Background" />
                         <ColorPicker fx:id="rectBgColour" style="-fx-background-color: f0f0f0;">
@@ -74,8 +85,16 @@
                   </VBox>
                   <VBox fx:id="textVbox" prefHeight="655.0" prefWidth="254.0" spacing="5.0" visible="false">
                      <children>
-                        <Label prefWidth="234.0" text="Note: For textfields, press 'enter' key to" textFill="#403e3e" />
-                        <Label text=" confirm changes" textFill="#403e3e" />
+                        <Label prefWidth="234.0" text="Note: For textfields, press 'enter' key to" textFill="#403e3e">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <Label text=" confirm changes" textFill="#403e3e">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
                         <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
                         <Label text="Change Text" />
                         <TextField fx:id="changeTextInput" promptText="Enter text" />
@@ -104,6 +123,8 @@
                               <Button fx:id="textAlignRight" layoutX="108.0" layoutY="10.0" mnemonicParsing="false" text="Right" />
                            </children>
                         </Pane>
+                        <Label text="Rotation:" />
+                        <Button fx:id="rotateText" mnemonicParsing="false" text="Rotate" />
                         <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
                         <Label text="Border colour:" />
                         <ColorPicker fx:id="textBorderColour" style="-fx-background-color: f0f0f0;" />
@@ -129,6 +150,14 @@
                         <Label text="Border width:" />
                         <TextField fx:id="circleBorderWidth" />
                         <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
+                        <Label text="Resize:" />
+                        <Pane prefHeight="43.0" prefWidth="228.0">
+                           <children>
+                              <Label layoutX="9.0" layoutY="6.0" text="Radius" />
+                              <TextField fx:id="circleRadius" layoutX="66.0" layoutY="2.0" prefHeight="26.0" prefWidth="134.0" promptText="enter radius" text="50" />
+                           </children>
+                        </Pane>
+                        <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
                         <Label text="Background" />
                         <ColorPicker fx:id="circleBgColour" style="-fx-background-color: f0f0f0;">
                            <value>
@@ -144,6 +173,18 @@
                      <children>
                         <Label text="Image:" />
                         <Button fx:id="imgChangePath" mnemonicParsing="false" prefHeight="26.0" prefWidth="160.0" style="-fx-background-color: f0f0f0;" text="Change path" />
+                        <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
+                        <Label text="Resize image" />
+                        <Pane prefHeight="71.0" prefWidth="221.0">
+                           <children>
+                              <Label layoutX="4.0" layoutY="6.0" text="width" />
+                              <Label layoutX="4.0" layoutY="37.0" text="height" />
+                              <TextField fx:id="imgWidth" layoutX="57.0" layoutY="2.0" promptText="enter width" />
+                              <TextField fx:id="imgHeight" layoutX="58.0" layoutY="33.0" promptText="enter height" />
+                           </children>
+                        </Pane>
+                        <Label text="Image rotate:" />
+                        <Button fx:id="imgRotate" mnemonicParsing="false" text="Rotate" />
                      </children>
                      <padding>
                         <Insets left="10.0" right="10.0" />

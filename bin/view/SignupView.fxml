@@ -6,6 +6,7 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -17,6 +18,9 @@
          <effect>
             <DropShadow />
          </effect>
+         <image>
+            <Image url="@../../img/scribble1.png" />
+         </image>
       </ImageView>
       <Label alignment="TOP_CENTER" prefWidth="250.0" text="Click here to change profile image" textFill="WHITE">
          <font>
