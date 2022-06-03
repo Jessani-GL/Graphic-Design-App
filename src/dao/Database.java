@@ -13,4 +13,10 @@ public class Database {
 		// Can also pass username and password
 		return DriverManager.getConnection(DB_URL);
 	}
+
+	public static String getDbUrl() {
+		return DB_URL;
+	}
+	
+	
 }

@@ -40,7 +40,7 @@ public class LoginController {
 
 	private Model model;
 	private Stage stage;
-	private BorderPane canvasStage = null;
+	
 
 	public LoginController(Stage stage, Model model) {
 		this.stage = stage;

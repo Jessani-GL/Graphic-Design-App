@@ -1,11 +1,15 @@
 package dao;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javafx.scene.image.Image;
 import model.User;
 
 public class UserDaoImpl implements UserDao {
@@ -77,11 +81,17 @@ public class UserDaoImpl implements UserDao {
 		}
 	}
 	
+	private PreparedStatement store, retrieve;
+	private String storeStmt = "INSERT INTO application(profileImage) VALUES(?)";
+	private String retrieveStmt = "SELECT profileImage FROM application WHERE username = ?";
+	
 	@Override
 	public User createUser(String username, String password, String firstName, String lastName, byte[] profileImage) throws SQLException {
 		String sql = "INSERT INTO " + TABLE_NAME + " VALUES (?, ?, ?, ?, ?)";
 		try (Connection connection = Database.getConnection();
 				PreparedStatement stmt = connection.prepareStatement(sql);) {
+			
+			
 			stmt.setString(1, username);
 			stmt.setString(2, password);
 			stmt.setString(3, firstName);
@@ -92,4 +102,65 @@ public class UserDaoImpl implements UserDao {
 			return new User(username, password, firstName, lastName, profileImage);
 		} 
 	}
+	
+	// print this image in sign up / changing profile
+	public Image chooseAndSaveFile(File file) {
+		Image img = null;
+		try {
+			Connection connection = Database.getConnection();
+			store = connection.prepareStatement(storeStmt);
+			retrieve = connection.prepareStatement(retrieveStmt);
+			FileInputStream fileInputStream = new FileInputStream(file);
+			store.setBinaryStream(1, fileInputStream, fileInputStream.available()); // search what this does
+			store.execute();
+			img = new Image(fileInputStream);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return img;
+	}
+	
+	public void loadImage() {
+		
+	}
+
+	public PreparedStatement getStore() {
+		return store;
+	}
+
+	public void setStore(PreparedStatement store) {
+		this.store = store;
+	}
+
+	public PreparedStatement getRetrieve() {
+		return retrieve;
+	}
+
+	public void setRetrieve(PreparedStatement retrieve) {
+		this.retrieve = retrieve;
+	}
+
+	public String getStoreStmt() {
+		return storeStmt;
+	}
+
+	public void setStoreStmt(String storeStmt) {
+		this.storeStmt = storeStmt;
+	}
+
+	public String getRetrieveStmt() {
+		return retrieveStmt;
+	}
+
+	public void setRetrieveStmt(String retrieveStmt) {
+		this.retrieveStmt = retrieveStmt;
+	}
+	
+	
 }

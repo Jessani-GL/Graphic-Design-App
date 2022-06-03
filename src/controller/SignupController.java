@@ -13,10 +13,14 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import javax.imageio.ImageIO;
 
+import dao.Database;
+import dao.UserDaoImpl;
 import data.SignupHolder;
 import data.UserInfoHolder;
 import javafx.fxml.FXML;
@@ -67,7 +71,7 @@ public class SignupController {
 	}
 
 	@FXML
-	public void initialize() throws FileNotFoundException {
+	public void initialize() throws Exception {
 //
 //		FileInputStream fileInputStream = new FileInputStream("/img/dog.jpeg");
 //		changeImage.setImage(new Image(fileInputStream));
@@ -79,10 +83,12 @@ public class SignupController {
 ////		// Setting image to the image view
 //		changeImage.setImage(image);
 //
-		
+////		UserDaoImpl  userIm = null;
+////		userIm.chooseAndSaveFile(changeImg());
 //		convertImgToBlob(changeProfileImage());
-//		automaticProfile();
+////		automaticProfile();
 //		System.out.println(profileData.toString());
+//		data();
 
 		createUser.setOnAction(event -> {
 
@@ -90,17 +96,17 @@ public class SignupController {
 				User user;
 				try {
 //					encryptString(username.getText()
-					profileData = convertImgToBlob(changeProfileImage());
-					System.out.println(profileData.toString());
+//					profileData = convertImgToBlob(changeProfileImage());
+//					System.out.println(profileData.toString());
 					user = model.getUserDao().createUser(username.getText(), password.getText(), firstName.getText(),
 							lastName.getText(), profileData);
 					if (user != null) {
 //						status.setText("Created " + user.getUsername());
 //						user.setFirstName(firstName.getText());
 //						user.setLastName(lastName.getText());
-						
+
 //						model.setCurrentUser(user);
-						
+
 //						status.setTextFill(Color.GREEN);
 						UserInfoHolder holder = UserInfoHolder.getInstance();
 						holder.setFirstName(user.getFirstName());
@@ -220,10 +226,10 @@ public class SignupController {
 		profileData = imgInfo;
 		return imgInfo;
 	}
-
+//
 	@FXML
 	private File changeProfileImage() {
-		
+
 		System.out.println("Choose Image");
 
 		FileChooser fileChooser = new FileChooser();
@@ -245,6 +251,82 @@ public class SignupController {
 
 	}
 	
+//	private PreparedStatement store, retrieve;
+//	private String storeStmt = "INSERT INTO application(profileImage) VALUES(?)";
+//	private String retrieveStmt = "SELECT profileImage FROM application WHERE username = ?";
+//	
+////	@FXML
+////	public void changeProfileImage(File file) {
+////		Image img = null;
+////		UserDaoImpl  userIm = null;
+////		try {
+////			Connection connection = Database.getConnection();
+////			store = connection.prepareStatement(storeStmt);
+////			retrieve = connection.prepareStatement(retrieveStmt);
+////			FileInputStream fileInputStream = new FileInputStream(file);
+////			store.setBinaryStream(1, fileInputStream, fileInputStream.available()); // search what this does
+////			store.execute();
+////			img = new Image(fileInputStream);
+////			changeImage.setImage(img);
+////		} catch (SQLException e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		} catch (IOException e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		}
+////		
+////		
+////	}
+//	
+//	
+//	private File changeImg() {
+//
+//		System.out.println("Choose Image");
+//
+//		FileChooser fileChooser = new FileChooser();
+//
+//		fileChooser.setSelectedExtensionFilter(new ExtensionFilter("images", "*.jpeg", "*.jpg", "*.png"));
+//
+//		File selectedFile = fileChooser.showOpenDialog(stage);
+//
+//		return selectedFile;
+//
+//	}
+//	
+//	
+//	public void chooseFile() {
+//		System.out.println("Choose Image");
+//
+//		FileChooser fileChooser = new FileChooser();
+//
+//		fileChooser.setSelectedExtensionFilter(new ExtensionFilter("images", "*.jpeg", "*.jpg", "*.png"));
+//
+//		File selectedFile = fileChooser.showOpenDialog(stage);
+//		
+////		FileInputStream fileInputStream = new FileInputStream(selectedFile);
+//		
+//	}
+
+//	void data() throws Exception {
+//		Database database = null;
+//
+//		// Registering the Driver
+////	      DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+////	      //Getting the connection
+////	      String mysqlUrl = "jdbc:mysql://localhost/sampleDB";
+////	      Connection con = DriverManager.getConnection(mysqlUrl, "root", "password");
+////	      System.out.println("Connection established......");
+//		PreparedStatement pstmt = database.getConnection().prepareStatement("INSERT INTO MyTable VALUES(?,?, ?, ?, ?)");
+//		pstmt.setString(1, "sample image");
+//		// Inserting Blob type
+//		InputStream in = new FileInputStream(changeProfileImage());
+//		pstmt.setBlob(5, in);
+//		// Executing the statement
+//		pstmt.execute();
+//		System.out.println("Record inserted......");
+//	}
+
 //	@FXML
 //	void changeProfileImage(MouseEvent event) {
 //		

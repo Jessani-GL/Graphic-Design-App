@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,7 +33,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
+import javafx.scene.transform.Rotate;
 import data.NewCanvasHolder;
+import data.ShapeDimensions;
 import data.SignupHolder;
 import data.TextPropertiesHolder;
 import data.UserInfoHolder;
@@ -94,7 +97,7 @@ public class CanvasController {
 	private MenuItem dropSaveAs;
 	@FXML
 	private MenuItem aboutMenu;
-	
+
 	// Tool buttons
 	@FXML
 	private Button textBtn;
@@ -106,7 +109,7 @@ public class CanvasController {
 	private Button imageBtn;
 	@FXML
 	private Button canvasBtn;
-	
+
 	// Changeable features
 	@FXML
 	private Label changeUsername;
@@ -160,6 +163,8 @@ public class CanvasController {
 	private TextField textBorderWidth;
 	@FXML
 	private ColorPicker textBackground;
+	@FXML
+	private Button rotateText;
 
 	// Change Rectangle Properties
 	@FXML
@@ -168,6 +173,13 @@ public class CanvasController {
 	private TextField rectBorderWidth;
 	@FXML
 	private ColorPicker rectBgColour;
+	// Rectangle Resize
+	@FXML
+	private TextField rectangleWidth;
+	@FXML
+	private TextField rectangleHeight;
+	@FXML
+	private Button rectangleRotate;
 
 	// Change Circle Properties
 	@FXML
@@ -176,10 +188,15 @@ public class CanvasController {
 	private TextField circleBorderWidth;
 	@FXML
 	private ColorPicker circleBgColour;
+	@FXML
+	private TextField circleRadius;
 
 	// Change Image Property
 	@FXML
 	private Button imgChangePath;
+	@FXML
+	private Button imgRotate;
+	// how to resize img?
 
 	@FXML
 	private ColorPicker modifyCanvasChangeBg;
@@ -193,25 +210,28 @@ public class CanvasController {
 	// Coordinates
 	private double startX;
 	private double startY;
+	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00");
 
 	// Zoom in and zoom out
 	private int zoomPercentage;
 	FileChooser fileChooser = new FileChooser();
 
 	Text text;
+	Label labelText = new Label();
 	Rectangle rectangle;
 	Circle circle;
 	ImageView addImage;
 
 	// Text Property Variables
-	private String[] fontFamilyList = { "Arial", "Monospace", "Times New Roman", "Gill Sans", "Verdana",
-			"Serif", "San Serif" };
+	private String[] fontFamilyList = { "Arial", "Monospace", "Times New Roman", "Gill Sans", "Verdana", "Serif",
+			"San Serif" };
 
 	// DATA
 	private UserInfoHolder userInfoHolder = UserInfoHolder.getInstance();
 	private NewCanvasHolder canvasHolder = NewCanvasHolder.getInstance();
 	private SignupHolder signupHolder = SignupHolder.getInstance();
 	private TextPropertiesHolder textHolder = TextPropertiesHolder.getInstance();
+	private ShapeDimensions shapeHolder = ShapeDimensions.getInstance();
 	private User user;
 
 	private Stage stage;
@@ -226,6 +246,7 @@ public class CanvasController {
 
 	@FXML
 	public void initialize() {
+		// Disabling users ability to use 'Clear Canvas' and 'Save as' unless they make a canvas
 		dropClearCanvas.setDisable(true);
 		dropSaveAs.setDisable(true);
 
@@ -234,41 +255,32 @@ public class CanvasController {
 		changeTextInput.setText("Text");
 		changeFontSize.setText("11");
 
-		User user;
-		user = model.getCurrentUser();
-//		changeUsername = new Label();
-		System.out.println(user.getFirstName());
-		changeUsername.setText(user.getFirstName());
-		
 		// ZOOM IN AND OUT FEATURE
 //		zoomInAndOut();
 
-//		changeUsername.setText(holder.getUsername());
-//		Image profileImage = convertProfileImage(signupHolder.getProfileImg());
-//		Image defaultProfileImage = convertProfileImage(signupHolder.getDefaultprofileImg());
-//		profilePicture.setImage(defaultProfileImage);
-//		/////////
+		// Attempt to set image from database
 //		user = model.getCurrentUser();
 //		Image profileImage = convertProfileImage(user.getProfileImage());
 //		profilePicture.setImage(profileImage);
-//		
-///////////s
-//		
-////		changeUsername.setText(userInfoHolder.getFirstName() + " " + userInfoHolder.getLastName());
-///////////
+		
+		// Attempt to set name from database
 //		Model model = new Model();
 //		changeUsername = new Label();
-///////////
-//		
-//		
-//////		user = model.getUserDao().getUser(name.getText(), password.getText());
-////////////////////
+//		user = model.getUserDao().getUser(name.getText(), password.getText());
 //		changeUsername.setText(model.getCurrentUser().getFirstName());
-/////////
+		
+//		User user;
+//		user = model.getCurrentUser();
+//		System.out.println(user.getFirstName());
+//		changeUsername.setText(user.getFirstName());
 
-		// PROFILE BTN SETTINGS
+		// Sets the first and last name after signing up and logging in
+		changeUsername.setText(userInfoHolder.getFirstName() + " " + userInfoHolder.getLastName());
+
+		// Profile Button : Navigates to the edit profile interface
 		profileBtn.setOnAction(event -> {
 			try {
+				
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Profile.fxml"));
 
 				// Customize controller instance
@@ -283,25 +295,16 @@ public class CanvasController {
 				canvasController.showStage(profileStage);
 
 				stage.close();
-
-				System.out.println("bruh");
-
-//				Scene scene = new Scene(profileStage);
-//				stage.setScene(scene);
-//				stage.show();
-				System.out.println("yellow");
 			} catch (IOException e) {
-//				message.setText(e.getMessage());
-				System.out.println("yea nah");
 				System.out.println(e.getMessage());
 			}
 		});
 
-		// ADD NEW CANVAS
+		// Button to add a new canvas
 		dropNewCanvas.setOnAction(event -> {
-			System.out.println("hello");
-			try {
 
+			try {
+				// Navigates to the width and height inputs to create a new canvas with users chosen dimensions
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/createNewCanvas.fxml"));
 
 				// Customize controller instance
@@ -310,63 +313,55 @@ public class CanvasController {
 				};
 
 				loader.setControllerFactory(controllerFactory);
+				// Used a DialogPane because it is designed to hover over the previous scene and return variables, which is the width and height
+				// of the canvas
 				DialogPane newCanvas = loader.load();
 
+				// Switch controller to the create new canvas fxml
 				CreateNewCanvasController createNewCanvasController = loader.getController();
 				createNewCanvasController.showStage(newCanvas);
 
-//				stage.close();
-
-				// Get width and height information from another file for the new canvas
+				// Get width and height information from the create canvas controller in order to create a new canvas
 				addANewCanvas(canvasHolder.getWidth(), canvasHolder.getHeight());
-				
+
+				// Enables the dropdown options of'Clear canvas' and 'Save as' drop down options available to use after creating a new canvas.
 				dropClearCanvas.setDisable(false);
 				dropSaveAs.setDisable(false);
-				
+
+				// Enables the user to use the left tool options, such as adding text, rectangle etc onto the canvas.
+				// Is originally disabled because the user needs to create a new canvas before being able to use it.
 				textBtn.setDisable(false);
 				rectBtn.setDisable(false);
 				circleBtn.setDisable(false);
 				imageBtn.setDisable(false);
 				canvasBtn.setDisable(false);
-
-				System.out.println("yellow");
+				
 			} catch (IOException e) {
-				System.out.println("yea nah");
 				System.out.println(e.getMessage());
 			}
 		});
 
-		// CLEAR CANVAS
+		// Clear Canvas : Deletes all edits made onto the canvas, and leaves user an empty canvas
 		dropClearCanvas.setOnAction(event -> {
-//			addANewCanvas(canvasHolder.getHeight(), canvasHolder.getWidth());
 			canvas.getChildren().removeAll(text, rectangle, circle, addImage);
 			canvas.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 		});
-		fileChooser.setSelectedExtensionFilter(new ExtensionFilter("images", "*.jpeg", "*.jpg", "*.png"));
-//		dropClearCanvas.setOnAction(new EventHandler<ActionEvent>() {
-//			
-//	         public void handle(ActionEvent event) {
-//	             //Opening a dialog box
-//	             fileChooser.showSaveDialog(stage);
-//	          }
-//		});
 
-		// SAVE AS
+
+
+		// SAVE AS : Attempt to save canvas as a image.
 		dropSaveAs.setOnAction(e -> {
-			try {
-				save();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+		
 //			saveAs();
 //			File file = fileChooser.showSaveDialog(new Stage());
+//			fileChooser.setSelectedExtensionFilter(new ExtensionFilter("images", "*.jpeg", "*.jpg", "*.png"));
 //			if (file != null) {
 //				saveAs();
 //			}
 		});
 
-		// ABOUT PAGE
+		// ABOUT PAGE : Navigates to a fxml file and changes controller to that designated fxml file. 
+		// The page displays the program version.
 		aboutMenu.setOnAction(event -> {
 			try {
 
@@ -384,20 +379,20 @@ public class CanvasController {
 				aboutController.showStage(About);
 
 			} catch (IOException e) {
-				System.out.println("yea nah");
 				System.out.println(e.getMessage());
 			}
 		});
 
-		// LOG OUT
+		// LOG OUT : Logs user out and is taken back to the login/signin page. 
 		logout.setOnAction(event -> {
 			stage.close();
 			parentStage.show();
 		});
 
-		// ZOOM IN AND OUT
+		// ZOOM IN AND OUT : Attempt to zoom in and out feature. 
 		slider.valueProperty().addListener(new ChangeListener<Number>() {
-
+			
+			// This method changes the percentage of the zoom in and out when using the slider.
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldNumber, Number newNumber) {
 
@@ -409,6 +404,8 @@ public class CanvasController {
 
 	}
 
+	// This method creates a new canvas. It creates a pane and adds it to the centre of the borderpane. 
+	// It also takes in the users width and height, which is why there is a width and height parameter.
 	public void addANewCanvas(Double width, Double height) {
 		canvas = new Pane();
 		canvas.setStyle("-fx-background-color: white;");
@@ -418,6 +415,7 @@ public class CanvasController {
 		smartCanvasPane.setCenter(canvas);
 	}
 
+	// This method converts the blob data from the database into a image variable. Which can be used to display the profile picture.
 	public static Image convertProfileImage(byte[] img) {
 
 		InputStream inputStream = new ByteArrayInputStream(img);
@@ -425,41 +423,16 @@ public class CanvasController {
 		return profilePic;
 	}
 
-	// CHANGE THIS CODE TO LOOK LIKE MINE
-	private static void addPersistenceDelegatesTo(Encoder encoder) {
-		encoder.setPersistenceDelegate(Font.class, new DefaultPersistenceDelegate(new String[] { "name", "size" }));
-		encoder.setPersistenceDelegate(Color.class,
-				new DefaultPersistenceDelegate(new String[] { "red", "green", "blue", "opacity" }));
-		encoder.setPersistenceDelegate(LinearGradient.class, new DefaultPersistenceDelegate(
-				new String[] { "startX", "startY", "endX", "endY", "proportional", "cycleMethod", "stops" }));
-		encoder.setPersistenceDelegate(RadialGradient.class, new DefaultPersistenceDelegate(new String[] { "focusAngle",
-				"focusDistance", "centerX", "centerY", "radius", "proportional", "cycleMethod", "stops" }));
-	}
 
-	private static final java.nio.file.Path SAVE_FILE_LOCATION = Paths.get(System.getProperty("user.home"),
-			"shapes.xml");
-
-	public void save() throws IOException {
-		try (XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(Files.newOutputStream(SAVE_FILE_LOCATION)))) {
-
-			encoder.setExceptionListener(e -> {
-				throw new RuntimeException(e);
-			});
-
-			addPersistenceDelegatesTo(encoder);
-
-			encoder.writeObject(canvas.getChildren().toArray(new Node[0]));
-		}
-	}
-
+	// This method is a attempt to create the zoom in and zoom out feature.
 	public void zoomInAndOut() {
 //		smartCanvasPane.getCenter().translateZProperty().bind(slider.valueProperty());
 //		smartCanvasPane.translateZProperty().bind(slider.valueProperty());
 		canvas.translateZProperty().set(canvas.getTranslateZ());
 	}
 
-	private FlowPane flow;
-
+	
+	// This is a FXML method which is connected to the Text Button. It adds a text onto the canvas.
 	@FXML
 	public void addText(ActionEvent Event) {
 
@@ -469,10 +442,10 @@ public class CanvasController {
 		imageVbox.setVisible(false);
 		modifyCanvasVbox.setVisible(false);
 
-		
 		text = new Text();
+//		labelText = new Label();
 		text.setFont(Font.font("Arial", FontPosture.REGULAR, 11));
-		flow = new FlowPane(text);
+		FlowPane flow = new FlowPane(text);
 		text.setText("Text");
 		text.setX(50);
 		text.setY(50);
@@ -510,15 +483,14 @@ public class CanvasController {
 
 		canvas.getChildren().add(flow);
 //		canvas.getChildren().add(redBorder);
-		
+
 		canvas.getChildren().add(text);
 		canvas.getChildren().forEach(this::makeDraggable);
 
 	}
 
-	
 	public void changeTextProperties() {
-		
+
 		changeTextInput.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
 				String input = changeTextInput.getText();
@@ -538,7 +510,7 @@ public class CanvasController {
 
 		changeFontSize.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
-				
+
 				int fontSize = Integer.parseInt(changeFontSize.getText());
 				System.out.println(fontSize);
 				text.setFont(Font.font(fontSize));
@@ -553,7 +525,7 @@ public class CanvasController {
 
 		textBold.setOnAction(event -> {
 //			text.setStyle("-fx-font-weight:" + FontWeight.BOLD+ ";");
-			
+
 			text.setFont(Font.font(textHolder.getfFamily(), FontWeight.EXTRA_BOLD, textHolder.getfSize()));
 		});
 
@@ -577,12 +549,12 @@ public class CanvasController {
 //			canvas.getChildren().add(text_flow);
 			text_flow.setTextAlignment(TextAlignment.CENTER);
 			VBox vbox = new VBox(text_flow);
-			  
-            // set alignment of vbox
-            vbox.setAlignment(Pos.CENTER);
-            canvas.getChildren().add(vbox);
+
+			// set alignment of vbox
+			vbox.setAlignment(Pos.CENTER);
+			canvas.getChildren().add(vbox);
 //			text.setTextAlignment(TextAlignment.CENTER);
-			 
+
 		});
 
 		textAlignRight.setOnAction(event -> {
@@ -699,6 +671,14 @@ public class CanvasController {
 
 		});
 
+		rotateText.setOnAction(event -> {
+			Rotate rotate = new Rotate();
+			rotate.setAngle(20);
+			rotate.setPivotX(50);
+			rotate.setPivotY(50);
+			text.getTransforms().addAll(rotate);
+		});
+
 		deleteElement.setOnAction(event -> {
 			canvas.getChildren().remove(text);
 		});
@@ -749,6 +729,40 @@ public class CanvasController {
 			rectangle.setFill(colour);
 		});
 
+		rectangleWidth.setOnKeyPressed(event -> {
+			if (event.getCode() == KeyCode.ENTER) {
+				String width = rectangleWidth.getText();
+				int rectWidth = Integer.parseInt(width);
+				rectangle.setWidth(rectWidth);
+				shapeHolder.setRectWidth(rectWidth);
+			}
+		});
+
+		rectangleHeight.setOnKeyPressed(event -> {
+			if (event.getCode() == KeyCode.ENTER) {
+				String height = rectangleHeight.getText();
+				int rectHeight = Integer.parseInt(height);
+				rectangle.setHeight(rectHeight);
+				shapeHolder.setRectHeight(rectHeight);
+			}
+		});
+
+		rectangleRotate.setOnAction(event -> {
+			Rotate rotate = new Rotate();
+			rotate.setAngle(20);
+
+			rotate.setPivotX(150);
+			rotate.setPivotY(150);
+			rectangle.getTransforms().addAll(rotate);
+
+			System.out.println(rotate.getAngle());
+//			rectangle.getTransforms()
+//					.add(new Rotate(20,
+//							rectangle.getBoundsInParent().getMinX() + (rectangle.getBoundsInLocal().getWidth() / 2),
+//							rectangle.getBoundsInParent().getMinX() + (rectangle.getBoundsInLocal().getHeight() / 2)));
+
+		});
+
 		deleteElement.setOnAction(event -> {
 			canvas.getChildren().remove(rectangle);
 		});
@@ -771,9 +785,9 @@ public class CanvasController {
 		changeCircleProperties();
 
 		canvas.getChildren().add(circle);
-		canvas.getChildren().forEach(this::makeDraggable);
+		canvas.getChildren().forEach(this::makeDraggableC);
+		
 
-//		System.out.print(circle.translateYProperty());
 
 	}
 
@@ -788,12 +802,27 @@ public class CanvasController {
 				String width = circleBorderWidth.getText();
 				int borderWidth = Integer.parseInt(width);
 				circle.setStrokeWidth(borderWidth);
+				
 			}
 		});
 
 		circleBgColour.setOnAction(event -> {
 			Color colour = circleBgColour.getValue();
 			circle.setFill(colour);
+		});
+
+		circleRadius.setOnKeyPressed(event -> {
+			if (event.getCode() == KeyCode.ENTER) {
+				String radius = circleRadius.getText();
+				int circleRadius = Integer.parseInt(radius);
+				circle.setRadius(circleRadius);
+				double w = circle.getLayoutBounds().getWidth();
+				double h = circle.getLayoutBounds().getHeight();
+				System.out.println(w);
+				System.out.println(h);
+				shapeHolder.setCircleWidth(w);
+				shapeHolder.setCircleHeight(h);
+			}
 		});
 
 		deleteElement.setOnAction(event -> {
@@ -852,6 +881,14 @@ public class CanvasController {
 			}
 		});
 
+		imgRotate.setOnAction(event -> {
+			Rotate rotate = new Rotate();
+			rotate.setAngle(20);
+			rotate.setPivotX(200);
+			rotate.setPivotY(200);
+			addImage.getTransforms().addAll(rotate);
+		});
+
 		deleteElement.setOnAction(event -> {
 			canvas.getChildren().remove(addImage);
 		});
@@ -866,33 +903,12 @@ public class CanvasController {
 		imageVbox.setVisible(false);
 		modifyCanvasVbox.setVisible(true);
 
-//		canvas = new Pane();
-//		Scene newScene1 = new Scene(canvas);
-//		canvas.setStyle("-fx-background-color: gray;");
-////		canvas2.setPrefSize(200, 200);
-//		canvas.setMaxHeight(500);
-//		canvas.setMaxWidth(500);
-//		smartCanvasPane.setCenter(canvas);
 
 		modifyCanvasChangeBg.setOnAction(event -> {
 			Color colour = modifyCanvasChangeBg.getValue();
 			canvas.setBackground(new Background(new BackgroundFill(colour, CornerRadii.EMPTY, Insets.EMPTY)));
-			
+
 		});
-
-//		Rectangle rectangle = new Rectangle();
-//		rectangle.setX(100);
-//		rectangle.setY(100);
-//		rectangle.setWidth(100);
-//		rectangle.setHeight(100);
-//		rectangle.setStroke(Color.RED);
-//		rectangle.setOpacity(10);
-//		rectangle.setFill(Color.AQUAMARINE);
-//		rectangle.setStrokeWidth(1);
-//		
-//		canvas2.getChildren().add(rectangle);
-
-//		smartCanvasPane.setCenter(canvas2);
 
 		System.out.println("bruh");
 
@@ -905,7 +921,9 @@ public class CanvasController {
 			startY = e.getSceneX() - node.getTranslateX();
 			double dragPointX = e.getX();
 			double dragPointY = e.getY();
-			coordinates.setText("x: " + dragPointX + " y: " + dragPointY);
+			coordinates.setText("x: " + DECIMAL_FORMAT.format(dragPointX) + " y: " + DECIMAL_FORMAT.format(dragPointY)
+			+ " w: " + shapeHolder.getRectWidth() + " h: " + shapeHolder.getRectHeight());
+			
 		});
 
 		node.setOnMouseDragged(e -> {
@@ -913,10 +931,35 @@ public class CanvasController {
 			node.setTranslateY(e.getSceneY() + 100 - startY);
 			double dragPointX = e.getX();
 			double dragPointY = e.getY();
-			coordinates.setText("x: " + dragPointX + " y: " + dragPointY);
+			coordinates.setText("x: " + DECIMAL_FORMAT.format(dragPointX) + " y: " + DECIMAL_FORMAT.format(dragPointY)
+			+ " w: " + shapeHolder.getRectWidth() + " h: " + shapeHolder.getRectHeight());
 		});
 
 	}
+	
+	public void makeDraggableC(Node node) {
+
+		node.setOnMousePressed(e -> {
+			startX = e.getSceneX() - node.getTranslateX();
+			startY = e.getSceneX() - node.getTranslateX();
+			double dragPointX = e.getX();
+			double dragPointY = e.getY();
+			coordinates.setText("x: " + DECIMAL_FORMAT.format(dragPointX) + " y: " + DECIMAL_FORMAT.format(dragPointY)
+			+ " w: " + shapeHolder.getCircleWidth() + " h: " + shapeHolder.getCircleHeight());
+			
+		});
+
+		node.setOnMouseDragged(e -> {
+			node.setTranslateX(e.getSceneX() - startX);
+			node.setTranslateY(e.getSceneY() + 100 - startY);
+			double dragPointX = e.getX();
+			double dragPointY = e.getY();
+			coordinates.setText("x: " + DECIMAL_FORMAT.format(dragPointX) + " y: " + DECIMAL_FORMAT.format(dragPointY)
+			+ " w: " + DECIMAL_FORMAT.format(shapeHolder.getCircleWidth()) + " h: " + DECIMAL_FORMAT.format(shapeHolder.getCircleHeight()));
+		});
+
+	}
+	
 
 	public void showStage(BorderPane root) {
 		Scene scene = new Scene(root, 1411, 856);
