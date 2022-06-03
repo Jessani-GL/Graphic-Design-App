@@ -103,7 +103,7 @@ public class UserDaoImpl implements UserDao {
 		} 
 	}
 	
-	// print this image in sign up / changing profile
+	// Attempt to save a chosen profile picture. 
 	public Image chooseAndSaveFile(File file) {
 		Image img = null;
 		try {
@@ -111,15 +111,15 @@ public class UserDaoImpl implements UserDao {
 			store = connection.prepareStatement(storeStmt);
 			retrieve = connection.prepareStatement(retrieveStmt);
 			FileInputStream fileInputStream = new FileInputStream(file);
-			store.setBinaryStream(1, fileInputStream, fileInputStream.available()); // search what this does
+			store.setBinaryStream(1, fileInputStream, fileInputStream.available()); 
 			store.execute();
 			img = new Image(fileInputStream);
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		

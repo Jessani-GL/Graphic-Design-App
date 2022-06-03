@@ -2,9 +2,9 @@ package data;
 
 public class NewCanvasHolder {
 
+	// This class saves the data for the width and height
 	private double width;
 	private double height;
-	
 	
 	private final static NewCanvasHolder INSTANCE = new NewCanvasHolder();
 

@@ -40,6 +40,7 @@ import model.Model;
 import model.User;
 
 public class SignupController {
+	// Variables contains user details, which are required for a user account.
 	@FXML
 	private TextField username;
 	@FXML
@@ -48,22 +49,28 @@ public class SignupController {
 	private TextField lastName;
 	@FXML
 	private TextField password;
+	// Variables for buttons on the fxml file/ sign up page. 
 	@FXML
 	private Button createUser;
 	@FXML
 	private Button close;
+	// Variable used for validation.
 	@FXML
 	private Label status;
+	// Variable for the profile picture option. 
 	@FXML
 	private ImageView changeImage;
+	
+	// Class and variable that saves and holds variables for the user details to be displayed in smart canvas. 
+	private static SignupHolder signupHolder = SignupHolder.getInstance();
+	private static byte[] profileData = null;
+
 
 	private Stage stage;
 	private Stage parentStage;
 	private Model model;
 
-	private static SignupHolder signupHolder = SignupHolder.getInstance();
-	private static byte[] profileData = null;
-
+	
 	public SignupController(Stage parentStage, Model model) {
 		this.stage = new Stage();
 		this.parentStage = parentStage;
@@ -72,24 +79,20 @@ public class SignupController {
 
 	@FXML
 	public void initialize() throws Exception {
-//
-//		FileInputStream fileInputStream = new FileInputStream("/img/dog.jpeg");
-//		changeImage.setImage(new Image(fileInputStream));
-//		changeImage = new ImageView();
-////		InputStream stream = new FileInputStream("/dog.jpeg");
-////		Image image = new Image(stream);
-//////		// Creating the image view
+
+		// Attempt to add image to the database. 
+//		// Creating the image view
 //		ImageView imageView = new ImageView();
-////		// Setting image to the image view
+//		// Setting image to the image view
 //		changeImage.setImage(image);
 //
-////		UserDaoImpl  userIm = null;
-////		userIm.chooseAndSaveFile(changeImg());
+//		UserDaoImpl  userIm = null;
+//		userIm.chooseAndSaveFile(changeImg());
 //		convertImgToBlob(changeProfileImage());
-////		automaticProfile();
+//		automaticProfile();
 //		System.out.println(profileData.toString());
-//		data();
 
+		// Method and validation to create a new user. 
 		createUser.setOnAction(event -> {
 
 			if (!username.getText().isEmpty() && !password.getText().isEmpty()) {
@@ -101,13 +104,15 @@ public class SignupController {
 					user = model.getUserDao().createUser(username.getText(), password.getText(), firstName.getText(),
 							lastName.getText(), profileData);
 					if (user != null) {
-//						status.setText("Created " + user.getUsername());
+						status.setText("Created " + user.getUsername());
+						status.setTextFill(Color.GREEN);
 //						user.setFirstName(firstName.getText());
 //						user.setLastName(lastName.getText());
-
 //						model.setCurrentUser(user);
 
-//						status.setTextFill(Color.GREEN);
+						
+						
+//						Saves user first and last name to display on Smart Canvas
 						UserInfoHolder holder = UserInfoHolder.getInstance();
 						holder.setFirstName(user.getFirstName());
 						holder.setLastName(user.getLastName());
@@ -115,21 +120,21 @@ public class SignupController {
 						stage.close();
 						parentStage.show();
 					} else {
-//						status.setText("Cannot create user");
-//						status.setTextFill(Color.RED);
+						status.setText("Cannot create user");
+						status.setTextFill(Color.RED);
 					}
 				} catch (SQLException e) {
-//					status.setText(e.getMessage());
-//					status.setTextFill(Color.RED);
-//					System.out.print(e); 
+					status.setText(e.getMessage());
+					status.setTextFill(Color.RED);
 				}
 
 			} else {
-//				status.setText("Empty username or password");
-//				status.setTextFill(Color.RED);
+				status.setText("Username or password is empty");
+				status.setTextFill(Color.RED);
 			}
 		});
 
+		// Closes program
 		close.setOnAction(event -> {
 			stage.close();
 			parentStage.show();
@@ -159,35 +164,7 @@ public class SignupController {
 
 	}
 
-	// one way hashing
-//	public void hashUserPassword(String password) {
-//		 String madeupPassword = null;
-//
-//		    try 
-//		    {
-//		      // Create MessageDigest instance for MD5
-//		      MessageDigest md = MessageDigest.getInstance("MD5");
-//
-//		      // Add password bytes to digest
-//		      md.update(password.getBytes());
-//
-//		      // Get the hash's bytes
-//		      byte[] bytes = md.digest();
-//
-//		      // This bytes[] has bytes in decimal format. Convert it to hexadecimal format
-//		      StringBuilder sb = new StringBuilder();
-//		      for (int i = 0; i < bytes.length; i++) {
-//		        sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-//		      }
-//
-//		      // Get complete hashed password in hex format
-//		      madeupPassword = sb.toString();
-//		    } catch (NoSuchAlgorithmException e) {
-//		      e.printStackTrace();
-//		    }
-//		    System.out.println(madeupPassword);
-//	}
-
+	// Default profile
 	public void automaticProfile() {
 		BufferedImage defaultPFP = null;
 		ByteArrayOutputStream result = null;
@@ -226,7 +203,8 @@ public class SignupController {
 		profileData = imgInfo;
 		return imgInfo;
 	}
-//
+
+	// Adds profile image when adding a new user. 
 	@FXML
 	private File changeProfileImage() {
 
@@ -236,6 +214,7 @@ public class SignupController {
 
 		fileChooser.setSelectedExtensionFilter(new ExtensionFilter("images", "*.jpeg", "*.jpg", "*.png"));
 
+		// Opens a window to access users direct files in order to choose a image for profile.
 		File selectedFile = fileChooser.showOpenDialog(stage);
 
 		try {
@@ -250,87 +229,6 @@ public class SignupController {
 		return selectedFile;
 
 	}
-	
-//	private PreparedStatement store, retrieve;
-//	private String storeStmt = "INSERT INTO application(profileImage) VALUES(?)";
-//	private String retrieveStmt = "SELECT profileImage FROM application WHERE username = ?";
-//	
-////	@FXML
-////	public void changeProfileImage(File file) {
-////		Image img = null;
-////		UserDaoImpl  userIm = null;
-////		try {
-////			Connection connection = Database.getConnection();
-////			store = connection.prepareStatement(storeStmt);
-////			retrieve = connection.prepareStatement(retrieveStmt);
-////			FileInputStream fileInputStream = new FileInputStream(file);
-////			store.setBinaryStream(1, fileInputStream, fileInputStream.available()); // search what this does
-////			store.execute();
-////			img = new Image(fileInputStream);
-////			changeImage.setImage(img);
-////		} catch (SQLException e) {
-////			// TODO Auto-generated catch block
-////			e.printStackTrace();
-////		} catch (IOException e) {
-////			// TODO Auto-generated catch block
-////			e.printStackTrace();
-////		}
-////		
-////		
-////	}
-//	
-//	
-//	private File changeImg() {
-//
-//		System.out.println("Choose Image");
-//
-//		FileChooser fileChooser = new FileChooser();
-//
-//		fileChooser.setSelectedExtensionFilter(new ExtensionFilter("images", "*.jpeg", "*.jpg", "*.png"));
-//
-//		File selectedFile = fileChooser.showOpenDialog(stage);
-//
-//		return selectedFile;
-//
-//	}
-//	
-//	
-//	public void chooseFile() {
-//		System.out.println("Choose Image");
-//
-//		FileChooser fileChooser = new FileChooser();
-//
-//		fileChooser.setSelectedExtensionFilter(new ExtensionFilter("images", "*.jpeg", "*.jpg", "*.png"));
-//
-//		File selectedFile = fileChooser.showOpenDialog(stage);
-//		
-////		FileInputStream fileInputStream = new FileInputStream(selectedFile);
-//		
-//	}
-
-//	void data() throws Exception {
-//		Database database = null;
-//
-//		// Registering the Driver
-////	      DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-////	      //Getting the connection
-////	      String mysqlUrl = "jdbc:mysql://localhost/sampleDB";
-////	      Connection con = DriverManager.getConnection(mysqlUrl, "root", "password");
-////	      System.out.println("Connection established......");
-//		PreparedStatement pstmt = database.getConnection().prepareStatement("INSERT INTO MyTable VALUES(?,?, ?, ?, ?)");
-//		pstmt.setString(1, "sample image");
-//		// Inserting Blob type
-//		InputStream in = new FileInputStream(changeProfileImage());
-//		pstmt.setBlob(5, in);
-//		// Executing the statement
-//		pstmt.execute();
-//		System.out.println("Record inserted......");
-//	}
-
-//	@FXML
-//	void changeProfileImage(MouseEvent event) {
-//		
-//	}
 
 	public void showStage(Pane root) {
 

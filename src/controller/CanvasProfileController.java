@@ -25,13 +25,16 @@ import model.Model;
 import model.User;
 
 public class CanvasProfileController {
-
+	
+	// Variables for buttons
 	@FXML
 	private Button okBtn;
 	@FXML
 	private Button cancel;
+	// Variable to change profile image.
 	@FXML 
 	private ImageView profileImage;
+	// Variables to change name.
 	@FXML 
 	private TextField firstName;
 	@FXML 
@@ -49,32 +52,11 @@ public class CanvasProfileController {
 
 	@FXML
 	public void initialize() {
-//		createUser.setOnAction(event -> {
-//			try {
-//				FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Canvas.fxml"));
-//				
-//				// Customize controller instance
-//				Callback<Class<?>, Object> controllerFactory = param -> {
-//					return new CanvasController(stage, model);
-//				};
-//
-//				loader.setControllerFactory(controllerFactory);
-//				GridPane root = loader.load();
-//				
-//				CanvasController canvasController = loader.getController();
-//				canvasController.showStage(root);
-//				
-//				
-//				
-//				stage.close();
-//			} catch (IOException e) {
-//				
-//			}
-//			
-//		});
+
 //		String fName = firstName.getText();
 //		String lName = lastName.getText();
 		
+		// Changes profile picture
 		profileImage.setOnMouseClicked(event -> {
 			System.out.println("Choose Image");
 			
@@ -89,18 +71,21 @@ public class CanvasProfileController {
 				profileImage.setImage(new Image(fileInputStream));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
-//				status.setTextFill(Color.RED);
+				System.out.print(e.getMessage());
 			}
 			
 			
 		});
 
+		// User is taken back to main page (Smart Canvas)
 		okBtn.setOnAction(event -> {
 			// image change is transfered to canvas
-			profileImage.setImage(null); // how to get image?? return method??
+			profileImage.setImage(null); 
 			stage.close();
 			parentStage.show();
 		});
+		
+		// User is taken back to main page (Smart Canvas)
 		cancel.setOnAction(event -> {
 			stage.close();
 			parentStage.show();
@@ -109,6 +94,7 @@ public class CanvasProfileController {
 		
 	}
 	
+	// Method to retrieve image from the users direct files to select a new profile image. 
 	@FXML
 	private void changeProfileImage() {
 		System.out.println("Choose Image");
@@ -117,6 +103,7 @@ public class CanvasProfileController {
 		
 		fileChooser.setSelectedExtensionFilter(new ExtensionFilter("images", "*.jpeg", "*.jpg", "*.png"));
 		
+		// Opens new window to choose a image from their direct computer. 
 		File selectedFile = fileChooser.showOpenDialog(stage);
 		
 		try {
@@ -124,10 +111,11 @@ public class CanvasProfileController {
 			profileImage.setImage(new Image(fileInputStream));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-//			status.setTextFill(Color.RED);
+			System.out.print(e.getMessage());
 		}
 	}
 	
+	// Sets stage for current controller.
 	public void showStage(GridPane root) {
 		Scene scene = new Scene(root, 600, 400);
 		stage.setScene(scene);

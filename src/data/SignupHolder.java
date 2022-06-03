@@ -2,6 +2,7 @@ package data;
 
 public class SignupHolder {
 	
+	// This class saves the data for the profile image. 
 	private byte [] profileImg;
 	private byte [] defaultprofileImg;
 	

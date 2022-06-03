@@ -2,6 +2,8 @@ package data;
 
 public class TextPropertiesHolder {
 	
+	// This class saves the data font size and font family for the text element/s. 
+	// This is because it allows multiple changes when applying italics and bold onto text element/s.
 	private int fSize = 11;
 	private String fFamily = "Arial";
 

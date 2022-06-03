@@ -29,10 +29,11 @@ import model.Model;
 import model.User;
 
 public class AboutController {
-
+	
+	// Variable for button to return back to main scene of Smart canvas. 
 	@FXML
 	private Button close;
-	
+	// Label to display java version. 
 	@FXML
 	private Label javaVersion;
 	@FXML
@@ -51,8 +52,10 @@ public class AboutController {
 	@FXML
 	public void initialize() {
 
+		// Code to display the current version of the program. 
 		javaVersion.setText("Current JVM version - " + System.getProperty("java.version"));
 		
+		// Button leading back to Smart Canvas. 
 		close.setOnAction(event -> {
 			stage.close();
 			parentStage.show();
@@ -60,13 +63,13 @@ public class AboutController {
 
 	}
 
-
+	// DialogPane was used to set this scene because it is visually appealing to have a window above
+	// the main page of Smart Canvas. 
 	public void showStage(DialogPane newCanvas) {
 		Scene scene = new Scene(newCanvas, 479, 290);
 		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.setTitle("Make new canvas");
 		stage.showAndWait();
-//		stage.show();
 	}
 }

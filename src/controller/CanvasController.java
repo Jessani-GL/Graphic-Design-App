@@ -85,10 +85,11 @@ import model.Model;
 import model.User;
 
 public class CanvasController {
-	// Program
+	// Main Program
 	@FXML
 	private BorderPane smartCanvasPane;
-	// MENU ITEMS
+	// MENU ITEMS : Contains options for the user to access. Contains 'drop' in the name because it is part of
+	// the dropdown menu in the menu bar
 	@FXML
 	private MenuItem dropNewCanvas;
 	@FXML
@@ -98,7 +99,9 @@ public class CanvasController {
 	@FXML
 	private MenuItem aboutMenu;
 
-	// Tool buttons
+	// Tool buttons : these variables were named by what they are, such as text and combined with 'Btn', 
+	// which is a shortened version of button. It is the buttons assigned on the left part of the Smart canvas, 
+	// which clearly illustrate what they are, a button for their designated label. 
 	@FXML
 	private Button textBtn;
 	@FXML
@@ -110,23 +113,31 @@ public class CanvasController {
 	@FXML
 	private Button canvasBtn;
 
-	// Changeable features
+	// Changeable features : These variables are for the profile on the top right of the smart canvas.
+	// To display the user and their profile picture, as well as allowing them to edit their profile 
+	// and to logout
 	@FXML
 	private Label changeUsername;
 	@FXML
 	private ImageView profilePicture;
 	@FXML
-	private Slider slider;
-	@FXML
-	private Label zoomLabel;
-	@FXML
-	private Label coordinates;
-	@FXML
 	private Button profileBtn;
 	@FXML
 	private Button logout;
 
-	// Property Tabs
+	// Variables the zoom in and zoom out feature. It uses a slider and label that is interactable 
+	// and displays the percentage value of the zoom in and zoom out.
+	@FXML
+	private Slider slider; 
+	@FXML
+	private Label zoomLabel;
+	
+	// Displays the coordinates of the elements. As well as the size of the element
+	@FXML
+	private Label coordinates;
+	
+	// Property Tabs : Displays the property details of each tool that can be used on a canvas (text, shapes etc)
+	// It shows editable features for each tool
 	@FXML
 	private VBox textVbox;
 	@FXML
@@ -138,7 +149,7 @@ public class CanvasController {
 	@FXML
 	private VBox modifyCanvasVbox;
 
-	// Change Text Properties
+	// Change Text Properties : These variables are the editable features that can be applied onto text element/s
 	@FXML
 	private TextField changeTextInput;
 	@FXML
@@ -166,7 +177,7 @@ public class CanvasController {
 	@FXML
 	private Button rotateText;
 
-	// Change Rectangle Properties
+	// Change Rectangle Properties : These variables are the editable features that can be applied onto rectangle element/s
 	@FXML
 	private ColorPicker rectBorderColour;
 	@FXML
@@ -181,7 +192,7 @@ public class CanvasController {
 	@FXML
 	private Button rectangleRotate;
 
-	// Change Circle Properties
+	// Change Circle Properties : These variables are the editable features that can be applied onto circle element/s
 	@FXML
 	private ColorPicker circleBorderColour;
 	@FXML
@@ -191,16 +202,21 @@ public class CanvasController {
 	@FXML
 	private TextField circleRadius;
 
-	// Change Image Property
+	// Change Image Properties : These variables are the editable features that can be applied onto image element/s
 	@FXML
 	private Button imgChangePath;
 	@FXML
 	private Button imgRotate;
-	// how to resize img?
+	@FXML
+	private TextField imgWidth;
+	@FXML
+	private TextField imgHeight;
 
+//	Change Canvas Property : This variable is a editable feature that can change the background colour of a canvas.
 	@FXML
 	private ColorPicker modifyCanvasChangeBg;
 
+	// Element is called deleteElement because it deletes elements. 
 	@FXML
 	private MenuItem deleteElement;
 
@@ -214,19 +230,20 @@ public class CanvasController {
 
 	// Zoom in and zoom out
 	private int zoomPercentage;
-	FileChooser fileChooser = new FileChooser();
+	private FileChooser fileChooser = new FileChooser();
 
-	Text text;
-	Label labelText = new Label();
-	Rectangle rectangle;
-	Circle circle;
-	ImageView addImage;
+	// Contains the elements that are added to the canvas. Was made into a variable to enable 
+	// myself to use it globally within this file
+	private Text text;
+	private Rectangle rectangle;
+	private Circle circle;
+	private ImageView addImage;
 
-	// Text Property Variables
+	// Text Property Variables : Contains font family options for changing the font style for text.
 	private String[] fontFamilyList = { "Arial", "Monospace", "Times New Roman", "Gill Sans", "Verdana", "Serif",
 			"San Serif" };
 
-	// DATA
+	// DATA : Contains classes that hold data in order for them to be used in other classes. 
 	private UserInfoHolder userInfoHolder = UserInfoHolder.getInstance();
 	private NewCanvasHolder canvasHolder = NewCanvasHolder.getInstance();
 	private SignupHolder signupHolder = SignupHolder.getInstance();
@@ -234,6 +251,7 @@ public class CanvasController {
 	private ShapeDimensions shapeHolder = ShapeDimensions.getInstance();
 	private User user;
 
+	// Controller variables
 	private Stage stage;
 	private Stage parentStage;
 	private Model model;
@@ -432,10 +450,11 @@ public class CanvasController {
 	}
 
 	
-	// This is a FXML method which is connected to the Text Button. It adds a text onto the canvas.
+	// This is a FXML method which is connected to the Text Button. It adds text elements onto the canvas.
 	@FXML
 	public void addText(ActionEvent Event) {
 
+		// Makes only the text properties visible : The editable options for text. And makes all other editable properties for other elements invisible to avoid clashed visuals
 		textVbox.setVisible(true);
 		rectVbox.setVisible(false);
 		circleVbox.setVisible(false);
@@ -443,26 +462,14 @@ public class CanvasController {
 		modifyCanvasVbox.setVisible(false);
 
 		text = new Text();
-//		labelText = new Label();
 		text.setFont(Font.font("Arial", FontPosture.REGULAR, 11));
 		FlowPane flow = new FlowPane(text);
 		text.setText("Text");
 		text.setX(50);
 		text.setY(50);
-//		text.setOnMouseEntered(e -> {
-////			text.setStyle("-fx-background-color: black;");
-//			text.setStroke(Color.BLUE);
-//			
-//	        // other things you need to do when the mouse hovers....
-//	    });
 
-//		text.onMouseClickedProperty().set(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent e) {
-//            	text.setStroke(Color.BLUE);
-//            }
-//        });
 
+		// Below is an attempt to create a selection margin and/or background for the text
 		final Rectangle redBorder = new Rectangle(0, 0, Color.TRANSPARENT);
 		redBorder.setStroke(Color.RED);
 		redBorder.setManaged(false);
@@ -479,18 +486,24 @@ public class CanvasController {
 
 		});
 
+		// Method that enables text properties to be changed and edited
 		changeTextProperties();
 
-		canvas.getChildren().add(flow);
+		// Below is an attempt to create a selection margin and/or background for the text part 2
+//		canvas.getChildren().add(flow);
 //		canvas.getChildren().add(redBorder);
 
+		// Adds text element/s onto the canvas
 		canvas.getChildren().add(text);
+		// Makes all text elements draggable
 		canvas.getChildren().forEach(this::makeDraggable);
 
 	}
 
+	// Method changes the text properties. It contains logic that allows editable changes to the text.
 	public void changeTextProperties() {
 
+		// Changes the text of the text element on key pressed 'Enter'.
 		changeTextInput.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
 				String input = changeTextInput.getText();
@@ -500,14 +513,15 @@ public class CanvasController {
 			}
 		});
 
+		// Changes font of the text
 		fontChoice.setOnAction(event -> {
-
 			String fontChoose = fontChoice.getValue();
 			text.setStyle("-fx-font-family: " + fontChoose + ";");
 			textHolder.setfFamily(fontChoose);
 
 		});
 
+		// Changes font size of the text on key pressed 'Enter'.
 		changeFontSize.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
 
@@ -518,45 +532,48 @@ public class CanvasController {
 			}
 		});
 
+		// Changes colour of the text
 		textColourChoice.setOnAction(event -> {
 			Color colour = textColourChoice.getValue();
 			text.setFill(colour);
 		});
 
+		// Makes the text bold
 		textBold.setOnAction(event -> {
-//			text.setStyle("-fx-font-weight:" + FontWeight.BOLD+ ";");
-
 			text.setFont(Font.font(textHolder.getfFamily(), FontWeight.EXTRA_BOLD, textHolder.getfSize()));
 		});
 
+		// Makes the text italic
 		textItalics.setOnAction(event -> {
 			text.setFont(Font.font(textHolder.getfFamily(), FontPosture.ITALIC, textHolder.getfSize()));
-//			text.setFont(Font.font("Verdana", FontPosture.ITALIC, 20));
 		});
 
+		// Button to assign the text to the left
 		textAlignLeft.setOnAction(event -> {
-//			text.setTextAlignment(TextAlignment.LEFT);
-			TextFlow text_flow = new TextFlow();
-			text_flow.getChildren().add(text);
-			canvas.getChildren().add(text_flow);
-			text_flow.setTextAlignment(TextAlignment.LEFT);
-
-		});
-
-		textAlignMiddle.setOnAction(event -> {
-			TextFlow text_flow = new TextFlow();
-			text_flow.getChildren().add(text);
+			text.setTextAlignment(TextAlignment.LEFT);
+//			TextFlow text_flow = new TextFlow();
+//			text_flow.getChildren().add(text);
 //			canvas.getChildren().add(text_flow);
-			text_flow.setTextAlignment(TextAlignment.CENTER);
-			VBox vbox = new VBox(text_flow);
-
-			// set alignment of vbox
-			vbox.setAlignment(Pos.CENTER);
-			canvas.getChildren().add(vbox);
-//			text.setTextAlignment(TextAlignment.CENTER);
+//			text_flow.setTextAlignment(TextAlignment.LEFT);
 
 		});
 
+//		Button to assign the text to the middle
+		textAlignMiddle.setOnAction(event -> {
+//			TextFlow text_flow = new TextFlow();
+//			text_flow.getChildren().add(text);
+//			canvas.getChildren().add(text_flow);
+//			text_flow.setTextAlignment(TextAlignment.CENTER);
+//			VBox vbox = new VBox(text_flow);
+//
+//			// set alignment of vbox
+//			vbox.setAlignment(Pos.CENTER);
+//			canvas.getChildren().add(vbox);
+			text.setTextAlignment(TextAlignment.CENTER);
+
+		});
+
+		// Button to assign the text to the right
 		textAlignRight.setOnAction(event -> {
 //			text.setTextAlignment(TextAlignment.RIGHT);
 			TextFlow text_flow = new TextFlow();
@@ -565,35 +582,13 @@ public class CanvasController {
 			text_flow.setTextAlignment(TextAlignment.RIGHT);
 		});
 
-//		Rectangle textBorder = new Rectangle(0, 0, Color.TRANSPARENT);
-//		
-//		textBorderColour.setOnAction(event -> {
-//			Color colour = textBorderColour.getValue();
-////			Rectangle textBorder = new Rectangle(0, 0, Color.TRANSPARENT);
-//			textBorder.setStroke(colour);
-//			textBorder.setManaged(false);
-//			text.boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
-//
-//				@Override
-//				public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
-//					textBorder.setLayoutX(text.getBoundsInParent().getMinX());
-//					textBorder.setLayoutY(text.getBoundsInParent().getMinY());
-//					textBorder.setWidth(text.getBoundsInParent().getWidth() + 5);
-//					textBorder.setHeight(text.getBoundsInParent().getHeight() + 5);
-//
-//				}
-//
-//			});
-//
-//			canvas.getChildren().add(textBorder);
-//			canvas.getChildren().forEach(this::makeDraggable);
-//		});
-
+		// Changes stroke colour of text
 		textBorderColour.setOnAction(event -> {
 			Color colour = textBorderColour.getValue();
 			text.setStroke(colour);
 		});
 
+		// Changes width stroke of text on key pressed 'Enter'.
 		textBorderWidth.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
 				String width = textBorderWidth.getText();
@@ -602,43 +597,8 @@ public class CanvasController {
 			}
 		});
 
-//		textBackground.setOnAction(event -> {
-//			Color colour = textBackground.getValue();
-//
-//			int r = ((int) Math.round(colour.getRed() * 255)) << 24;
-//			int g = ((int) Math.round(colour.getGreen() * 255)) << 16;
-//			int b1 = ((int) Math.round(colour.getBlue() * 255)) << 8;
-//			int a = ((int) Math.round(colour.getOpacity() * 255));
-//			String hexColour = String.format("#%08X", (r + g + b1 + a));
-////
-////			System.out.println(hexColour);
-////
-//////			text.setStyle("-fx-background-color: "+hexColour.toString()+";");
-//////			text.setStyle("-fx-background-color: "+hexColour+";"); //
-////			text.setStyle("-fx-background-color: #fdfdfd;");
-//
-//			final Bounds out = flow.getBoundsInLocal();
-//			final StringBuilder sbColors = new StringBuilder();
-//			final StringBuilder sbInsets = new StringBuilder();
-//			AtomicInteger cont = new AtomicInteger();
-//			flow.getChildrenUnmodifiable().forEach(n -> {
-//				sbColors.append("hsb(").append((((double) cont.get()) / ((double) flow.getChildren().size())) * 360d)
-//						.append(", 60%, 90%)");
-//				Bounds b = ((Text) n).getBoundsInParent();
-//				sbInsets.append(b.getMinY()).append(" ");
-//				sbInsets.append(Math.min(stage.getWidth(), out.getMaxX()) - b.getMaxX()).append(" ");
-//				sbInsets.append(Math.min(stage.getHeight(), out.getMaxY()) - b.getMaxY()).append(" ");
-//				sbInsets.append(b.getMinX());
-//				if (cont.getAndIncrement() < flow.getChildren().size() - 1) {
-//					sbColors.append(", ");
-//					sbInsets.append(", ");
-//				}
-//			});
-//			flow.setStyle("-fx-background-color: " + hexColour + ";");
-//			
-//			
-//		});
 
+		// Attempt to change the text background. It creates a border around the text
 		textBackground.setOnAction(event -> {
 
 			Color colour = textBackground.getValue();
@@ -671,6 +631,7 @@ public class CanvasController {
 
 		});
 
+		// Rotates text using a button
 		rotateText.setOnAction(event -> {
 			Rotate rotate = new Rotate();
 			rotate.setAngle(20);
@@ -679,21 +640,24 @@ public class CanvasController {
 			text.getTransforms().addAll(rotate);
 		});
 
+		// Deletes text element 
 		deleteElement.setOnAction(event -> {
 			canvas.getChildren().remove(text);
 		});
 
 	}
 
+//	This is a FXML method which is connected to the 'Rect' Button, aka Rectangle button. It adds rectangle elements onto the canvas.
 	@FXML
 	public void addRect(ActionEvent Event) {
-
+//		Makes only the Rectangle properties visible : The editable options for rectangle/s. And makes all other editable properties for other elements invisible to avoid clashed visuals
 		textVbox.setVisible(false);
 		rectVbox.setVisible(true);
 		circleVbox.setVisible(false);
 		imageVbox.setVisible(false);
 		modifyCanvasVbox.setVisible(false);
 
+		// Creates rectangle element
 		rectangle = new Rectangle();
 		rectangle.setX(100);
 		rectangle.setY(100);
@@ -704,18 +668,22 @@ public class CanvasController {
 //		rectangle.setStrokeWidth(1);
 		changeRectProperties();
 
+		// Adds rectangle element/s to canvas
 		canvas.getChildren().add(rectangle);
 		canvas.getChildren().forEach(this::makeDraggable);
 
 	}
 
+	// Method changes the rectangle properties, aka 'rect' for short. It contains logic that allows editable changes to the rectangle/s.
 	public void changeRectProperties() {
 
+		// Changes rectangle border colour.
 		rectBorderColour.setOnAction(event -> {
 			Color colour = rectBorderColour.getValue();
 			rectangle.setStroke(colour);
 		});
 
+		// Changes rectangle border width on key pressed 'Enter'.
 		rectBorderWidth.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
 				String width = rectBorderWidth.getText();
@@ -724,11 +692,13 @@ public class CanvasController {
 			}
 		});
 
+		// Changes background colour (aka bg colour) of rectangle
 		rectBgColour.setOnAction(event -> {
 			Color colour = rectBgColour.getValue();
 			rectangle.setFill(colour);
 		});
 
+		// Changes rectangle width on key pressed 'Enter'.
 		rectangleWidth.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
 				String width = rectangleWidth.getText();
@@ -738,6 +708,7 @@ public class CanvasController {
 			}
 		});
 
+		// Changes rectangle height on key pressed 'Enter'.
 		rectangleHeight.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
 				String height = rectangleHeight.getText();
@@ -747,6 +718,7 @@ public class CanvasController {
 			}
 		});
 
+		// Rotates rectangle
 		rectangleRotate.setOnAction(event -> {
 			Rotate rotate = new Rotate();
 			rotate.setAngle(20);
@@ -763,13 +735,16 @@ public class CanvasController {
 
 		});
 
+		// Deletes rectangle/s element/s.
 		deleteElement.setOnAction(event -> {
 			canvas.getChildren().remove(rectangle);
 		});
 	}
 
+//	This is a FXML method which is connected to the Circle Button. It adds circle elements onto the canvas.
 	@FXML
 	public void addCircle(ActionEvent Event) {
+//		Makes only the Circle properties visible : The editable options for circle/s. And makes all other editable properties for other elements invisible to avoid clashed visuals
 		textVbox.setVisible(false);
 		rectVbox.setVisible(false);
 		circleVbox.setVisible(true);
@@ -791,12 +766,15 @@ public class CanvasController {
 
 	}
 
+	// Method changes the circle properties. It contains logic that allows editable changes to the circle/s.
 	public void changeCircleProperties() {
+		// Changes colour of the border of circle element/s.
 		circleBorderColour.setOnAction(event -> {
 			Color colour = circleBorderColour.getValue();
 			circle.setStroke(colour);
 		});
 
+		// Changes border width of circle element/s on key pressed 'Enter'.
 		circleBorderWidth.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
 				String width = circleBorderWidth.getText();
@@ -806,11 +784,13 @@ public class CanvasController {
 			}
 		});
 
+		// Changes background colour (aka bg colour) of circle.
 		circleBgColour.setOnAction(event -> {
 			Color colour = circleBgColour.getValue();
 			circle.setFill(colour);
 		});
 
+		// Changes circle radius (aka size of circle) of circle/s on key pressed 'Enter'.
 		circleRadius.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
 				String radius = circleRadius.getText();
@@ -825,14 +805,17 @@ public class CanvasController {
 			}
 		});
 
+		// Deletes circle element/s.
 		deleteElement.setOnAction(event -> {
 			canvas.getChildren().remove(circle);
 		});
 
 	}
-
+	
+//	This is a FXML method which is connected to the Image Button. It adds images onto the canvas.
 	@FXML
 	public void addImage(ActionEvent Event) {
+//		Makes only the Image properties visible : The editable options for images. And makes all other editable properties for other elements invisible to avoid clashed visuals
 		textVbox.setVisible(false);
 		rectVbox.setVisible(false);
 		circleVbox.setVisible(false);
@@ -862,7 +845,8 @@ public class CanvasController {
 		canvas.getChildren().forEach(this::makeDraggable);
 
 	}
-
+	
+	// Method changes the image properties. It contains logic that allows editable changes to the image/s.
 	public void changeImageProperties() {
 
 		imgChangePath.setOnAction(event -> {
@@ -880,6 +864,26 @@ public class CanvasController {
 
 			}
 		});
+		
+		// Changes image/s width on key pressed 'Enter'.
+		imgWidth.setOnKeyPressed(event -> {
+			if (event.getCode() == KeyCode.ENTER) {
+				String width = imgWidth.getText();
+				int imgWidth = Integer.parseInt(width);
+				addImage.setFitWidth(imgWidth);
+				shapeHolder.setRectWidth(imgWidth);
+			}
+		});
+
+		// Changes image/s height on key pressed 'Enter'.
+		imgHeight.setOnKeyPressed(event -> {
+			if (event.getCode() == KeyCode.ENTER) {
+				String height = imgHeight.getText();
+				int imgHeight = Integer.parseInt(height);
+				addImage.setFitHeight(imgHeight);
+				shapeHolder.setRectHeight(imgHeight);
+			}
+		});
 
 		imgRotate.setOnAction(event -> {
 			Rotate rotate = new Rotate();
@@ -894,8 +898,11 @@ public class CanvasController {
 		});
 	}
 
+//	This is a FXML method which is connected to the Canvas Button. It modifies/changes the canvas background
 	@FXML
 	public void modifyCanvas(ActionEvent Event) {
+		
+//		Makes only the Canvas properties visible : The editable options for the canvas. And makes all other editable properties for other elements invisible to avoid clashed visuals
 
 		textVbox.setVisible(false);
 		rectVbox.setVisible(false);
@@ -903,19 +910,19 @@ public class CanvasController {
 		imageVbox.setVisible(false);
 		modifyCanvasVbox.setVisible(true);
 
-
 		modifyCanvasChangeBg.setOnAction(event -> {
 			Color colour = modifyCanvasChangeBg.getValue();
 			canvas.setBackground(new Background(new BackgroundFill(colour, CornerRadii.EMPTY, Insets.EMPTY)));
 
 		});
 
-		System.out.println("bruh");
 
 	}
 
+	// This method enables elements to become draggable. It also shows the coordinates of the width and height of an element : rectangle.
 	public void makeDraggable(Node node) {
 
+		// When the users mouse clicks on a element, it retrieves the X and Y values. it also prints it as coordinates in the Smart Canvas application
 		node.setOnMousePressed(e -> {
 			startX = e.getSceneX() - node.getTranslateX();
 			startY = e.getSceneX() - node.getTranslateX();
@@ -926,6 +933,7 @@ public class CanvasController {
 			
 		});
 
+		// Enables user to drag elements and prints X and Y coordinates while being dragged.
 		node.setOnMouseDragged(e -> {
 			node.setTranslateX(e.getSceneX() - startX);
 			node.setTranslateY(e.getSceneY() + 100 - startY);
@@ -937,8 +945,10 @@ public class CanvasController {
 
 	}
 	
+	// This method enables elements to become draggable, but is creates to also show the width and height of the circle. 
 	public void makeDraggableC(Node node) {
 
+		// When the users mouse clicks on a element, it retrieves the X and Y values. it also prints it as coordinates in the Smart Canvas application
 		node.setOnMousePressed(e -> {
 			startX = e.getSceneX() - node.getTranslateX();
 			startY = e.getSceneX() - node.getTranslateX();
@@ -949,6 +959,7 @@ public class CanvasController {
 			
 		});
 
+		// Enables user to drag elements and prints X and Y coordinates while being dragged.
 		node.setOnMouseDragged(e -> {
 			node.setTranslateX(e.getSceneX() - startX);
 			node.setTranslateY(e.getSceneY() + 100 - startY);
@@ -960,7 +971,7 @@ public class CanvasController {
 
 	}
 	
-
+	// Method to show the Smart Canvas fxml and set it as the current scene. 
 	public void showStage(BorderPane root) {
 		Scene scene = new Scene(root, 1411, 856);
 		stage.setScene(scene);

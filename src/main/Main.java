@@ -26,9 +26,10 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			model.setup();
+			// Loads login page
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/LoginView.fxml"));
 			
-			// Customize controller instance
+			// Customize controller instance to login page
 			Callback<Class<?>, Object> controllerFactory = param -> {
 				return new LoginController(primaryStage, model);
 			};
@@ -41,7 +42,7 @@ public class Main extends Application {
 			loginController.showStage(root);
 		} catch (IOException | SQLException | RuntimeException e) {
 			Scene scene = new Scene(new Label(e.getMessage()), 587, 470);
-			primaryStage.setTitle("Error");
+			primaryStage.setTitle("There is an error");
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		}

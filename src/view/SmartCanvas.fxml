@@ -174,9 +174,17 @@
                         <Label text="Image:" />
                         <Button fx:id="imgChangePath" mnemonicParsing="false" prefHeight="26.0" prefWidth="160.0" style="-fx-background-color: f0f0f0;" text="Change path" />
                         <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
+                        <Label text="Resize image" />
+                        <Pane prefHeight="71.0" prefWidth="221.0">
+                           <children>
+                              <Label layoutX="4.0" layoutY="6.0" text="width" />
+                              <Label layoutX="4.0" layoutY="37.0" text="height" />
+                              <TextField fx:id="imgWidth" layoutX="57.0" layoutY="2.0" promptText="enter width" />
+                              <TextField fx:id="imgHeight" layoutX="58.0" layoutY="33.0" promptText="enter height" />
+                           </children>
+                        </Pane>
                         <Label text="Image rotate:" />
                         <Button fx:id="imgRotate" mnemonicParsing="false" text="Rotate" />
-                        <Label text="Resize image" />
                      </children>
                      <padding>
                         <Insets left="10.0" right="10.0" />

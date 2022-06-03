@@ -2,6 +2,7 @@ package data;
 
 public class UserInfoHolder {
 
+	// This class saves the data for the user details to be displayed on the Smart Canvas.
 	private String username;
 	private String firstName;
 	private String lastName;
