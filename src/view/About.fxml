@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<DialogPane fx:id="About" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AboutController">
+<DialogPane fx:id="About" style="-fx-background-color: E9AEC;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AboutController">
    <content>
       <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="290.0" prefWidth="479.0">
         <columnConstraints>
@@ -27,7 +27,7 @@
                   <Font size="18.0" />
                </font></Label>
             <Label text="Java version:" GridPane.rowIndex="1" />
-            <Button fx:id="close" mnemonicParsing="false" text="Close" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Button fx:id="close" mnemonicParsing="false" style="-fx-background-color: DCDBDA;" text="Close" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="210.0" />
                </GridPane.margin>

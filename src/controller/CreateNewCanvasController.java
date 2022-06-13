@@ -102,7 +102,7 @@ public class CreateNewCanvasController {
 					System.out.print(e.getMessage());
 				}
 			}
-			System.out.println("User clicked Ok");
+			
 			
 			
 		});

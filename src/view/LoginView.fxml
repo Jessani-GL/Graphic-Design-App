@@ -30,7 +30,7 @@
       <Label contentDisplay="CENTER" graphicTextGap="0.0" text="Password" textFill="WHITE" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS" />
       <TextField fx:id="name" maxHeight="26.0" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="159.0" promptText="Enter username" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
       <PasswordField fx:id="password" promptText="Enter password" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Button fx:id="login" contentDisplay="CENTER" maxHeight="30.0" maxWidth="60.0" mnemonicParsing="false" text="Signin" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.vgrow="ALWAYS">
+      <Button fx:id="login" contentDisplay="CENTER" maxHeight="30.0" maxWidth="60.0" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Signin" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets right="139.0" />
          </GridPane.margin></Button>
@@ -38,7 +38,7 @@
          <font>
             <Font size="7.0" />
          </font></Label>
-      <Button fx:id="close" contentDisplay="CENTER" maxHeight="30.0" maxWidth="60.0" mnemonicParsing="false" text="Close" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.vgrow="ALWAYS">
+      <Button fx:id="close" contentDisplay="CENTER" maxHeight="30.0" maxWidth="60.0" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Close" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.vgrow="ALWAYS">
          <GridPane.margin>
             <Insets />
          </GridPane.margin></Button>

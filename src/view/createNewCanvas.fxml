@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
 <DialogPane fx:id="newCanvasPane" style="-fx-background-color: DCDBDA;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CreateNewCanvasController">
    <content>
       <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="290.0" prefWidth="479.0">
@@ -34,18 +33,18 @@
                </GridPane.margin>
             </Label>
             <TextField fx:id="textWidth" promptText="Enter width" GridPane.columnIndex="1" />
-            <Button fx:id="okBtn" mnemonicParsing="false" style="-fx-background-color: E9EAEC;" text="OK" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Button fx:id="okBtn" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="OK" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="150.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="cancel" mnemonicParsing="false" style="-fx-background-color: E9EAEC;" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Button fx:id="cancel" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="200.0" />
                </GridPane.margin>
             </Button>
             <Label fx:id="resultLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="textHeight" promptText="Enter height" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="textHeight" prefHeight="26.0" prefWidth="232.0" promptText="Enter height" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
          <padding>
             <Insets bottom="20.0" left="50.0" right="80.0" top="20.0" />

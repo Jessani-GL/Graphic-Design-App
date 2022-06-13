@@ -44,8 +44,8 @@
       </PasswordField>
       <HBox alignment="CENTER" prefHeight="99.0" prefWidth="400.0" spacing="20.0">
          <children>
-            <Button fx:id="createUser" mnemonicParsing="false" text="Create user" />
-            <Button fx:id="close" mnemonicParsing="false" text="Close" />
+            <Button fx:id="createUser" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Create user" />
+            <Button fx:id="close" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Close" />
          </children>
       </HBox>
       <Label fx:id="status" />

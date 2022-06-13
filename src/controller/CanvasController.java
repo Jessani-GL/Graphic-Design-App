@@ -1,5 +1,8 @@
 package controller;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.beans.DefaultPersistenceDelegate;
 import java.beans.Encoder;
 import java.beans.XMLEncoder;
@@ -14,6 +17,9 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.imageio.ImageIO;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -44,12 +50,14 @@ import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -88,7 +96,8 @@ public class CanvasController {
 	// Main Program
 	@FXML
 	private BorderPane smartCanvasPane;
-	// MENU ITEMS : Contains options for the user to access. Contains 'drop' in the name because it is part of
+	// MENU ITEMS : Contains options for the user to access. Contains 'drop' in the
+	// name because it is part of
 	// the dropdown menu in the menu bar
 	@FXML
 	private MenuItem dropNewCanvas;
@@ -99,9 +108,11 @@ public class CanvasController {
 	@FXML
 	private MenuItem aboutMenu;
 
-	// Tool buttons : these variables were named by what they are, such as text and combined with 'Btn', 
-	// which is a shortened version of button. It is the buttons assigned on the left part of the Smart canvas, 
-	// which clearly illustrate what they are, a button for their designated label. 
+	// Tool buttons : these variables were named by what they are, such as text and
+	// combined with 'Btn',
+	// which is a shortened version of button. It is the buttons assigned on the
+	// left part of the Smart canvas,
+	// which clearly illustrate what they are, a button for their designated label.
 	@FXML
 	private Button textBtn;
 	@FXML
@@ -113,8 +124,10 @@ public class CanvasController {
 	@FXML
 	private Button canvasBtn;
 
-	// Changeable features : These variables are for the profile on the top right of the smart canvas.
-	// To display the user and their profile picture, as well as allowing them to edit their profile 
+	// Changeable features : These variables are for the profile on the top right of
+	// the smart canvas.
+	// To display the user and their profile picture, as well as allowing them to
+	// edit their profile
 	// and to logout
 	@FXML
 	private Label changeUsername;
@@ -125,18 +138,20 @@ public class CanvasController {
 	@FXML
 	private Button logout;
 
-	// Variables the zoom in and zoom out feature. It uses a slider and label that is interactable 
+	// Variables the zoom in and zoom out feature. It uses a slider and label that
+	// is interactable
 	// and displays the percentage value of the zoom in and zoom out.
 	@FXML
-	private Slider slider; 
+	private Slider slider;
 	@FXML
 	private Label zoomLabel;
-	
+
 	// Displays the coordinates of the elements. As well as the size of the element
 	@FXML
 	private Label coordinates;
-	
-	// Property Tabs : Displays the property details of each tool that can be used on a canvas (text, shapes etc)
+
+	// Property Tabs : Displays the property details of each tool that can be used
+	// on a canvas (text, shapes etc)
 	// It shows editable features for each tool
 	@FXML
 	private VBox textVbox;
@@ -149,7 +164,8 @@ public class CanvasController {
 	@FXML
 	private VBox modifyCanvasVbox;
 
-	// Change Text Properties : These variables are the editable features that can be applied onto text element/s
+	// Change Text Properties : These variables are the editable features that can
+	// be applied onto text element/s
 	@FXML
 	private TextField changeTextInput;
 	@FXML
@@ -177,7 +193,8 @@ public class CanvasController {
 	@FXML
 	private Button rotateText;
 
-	// Change Rectangle Properties : These variables are the editable features that can be applied onto rectangle element/s
+	// Change Rectangle Properties : These variables are the editable features that
+	// can be applied onto rectangle element/s
 	@FXML
 	private ColorPicker rectBorderColour;
 	@FXML
@@ -192,7 +209,8 @@ public class CanvasController {
 	@FXML
 	private Button rectangleRotate;
 
-	// Change Circle Properties : These variables are the editable features that can be applied onto circle element/s
+	// Change Circle Properties : These variables are the editable features that can
+	// be applied onto circle element/s
 	@FXML
 	private ColorPicker circleBorderColour;
 	@FXML
@@ -202,7 +220,8 @@ public class CanvasController {
 	@FXML
 	private TextField circleRadius;
 
-	// Change Image Properties : These variables are the editable features that can be applied onto image element/s
+	// Change Image Properties : These variables are the editable features that can
+	// be applied onto image element/s
 	@FXML
 	private Button imgChangePath;
 	@FXML
@@ -216,7 +235,7 @@ public class CanvasController {
 	@FXML
 	private ColorPicker modifyCanvasChangeBg;
 
-	// Element is called deleteElement because it deletes elements. 
+	// Element is called deleteElement because it deletes elements.
 	@FXML
 	private MenuItem deleteElement;
 
@@ -232,18 +251,21 @@ public class CanvasController {
 	private int zoomPercentage;
 	private FileChooser fileChooser = new FileChooser();
 
-	// Contains the elements that are added to the canvas. Was made into a variable to enable 
+	// Contains the elements that are added to the canvas. Was made into a variable
+	// to enable
 	// myself to use it globally within this file
 	private Text text;
 	private Rectangle rectangle;
 	private Circle circle;
 	private ImageView addImage;
 
-	// Text Property Variables : Contains font family options for changing the font style for text.
+	// Text Property Variables : Contains font family options for changing the font
+	// style for text.
 	private String[] fontFamilyList = { "Arial", "Monospace", "Times New Roman", "Gill Sans", "Verdana", "Serif",
 			"San Serif" };
 
-	// DATA : Contains classes that hold data in order for them to be used in other classes. 
+	// DATA : Contains classes that hold data in order for them to be used in other
+	// classes.
 	private UserInfoHolder userInfoHolder = UserInfoHolder.getInstance();
 	private NewCanvasHolder canvasHolder = NewCanvasHolder.getInstance();
 	private SignupHolder signupHolder = SignupHolder.getInstance();
@@ -264,7 +286,8 @@ public class CanvasController {
 
 	@FXML
 	public void initialize() {
-		// Disabling users ability to use 'Clear Canvas' and 'Save as' unless they make a canvas
+		// Disabling users ability to use 'Clear Canvas' and 'Save as' unless they make
+		// a canvas
 		dropClearCanvas.setDisable(true);
 		dropSaveAs.setDisable(true);
 
@@ -280,13 +303,13 @@ public class CanvasController {
 //		user = model.getCurrentUser();
 //		Image profileImage = convertProfileImage(user.getProfileImage());
 //		profilePicture.setImage(profileImage);
-		
+
 		// Attempt to set name from database
 //		Model model = new Model();
 //		changeUsername = new Label();
 //		user = model.getUserDao().getUser(name.getText(), password.getText());
 //		changeUsername.setText(model.getCurrentUser().getFirstName());
-		
+
 //		User user;
 //		user = model.getCurrentUser();
 //		System.out.println(user.getFirstName());
@@ -298,7 +321,7 @@ public class CanvasController {
 		// Profile Button : Navigates to the edit profile interface
 		profileBtn.setOnAction(event -> {
 			try {
-				
+
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Profile.fxml"));
 
 				// Customize controller instance
@@ -312,7 +335,8 @@ public class CanvasController {
 				CanvasProfileController canvasController = loader.getController();
 				canvasController.showStage(profileStage);
 
-				stage.close();
+				changeUsername.setText(userInfoHolder.getFirstName() + " " + userInfoHolder.getLastName());
+
 			} catch (IOException e) {
 				System.out.println(e.getMessage());
 			}
@@ -322,7 +346,8 @@ public class CanvasController {
 		dropNewCanvas.setOnAction(event -> {
 
 			try {
-				// Navigates to the width and height inputs to create a new canvas with users chosen dimensions
+				// Navigates to the width and height inputs to create a new canvas with users
+				// chosen dimensions
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/createNewCanvas.fxml"));
 
 				// Customize controller instance
@@ -331,7 +356,8 @@ public class CanvasController {
 				};
 
 				loader.setControllerFactory(controllerFactory);
-				// Used a DialogPane because it is designed to hover over the previous scene and return variables, which is the width and height
+				// Used a DialogPane because it is designed to hover over the previous scene and
+				// return variables, which is the width and height
 				// of the canvas
 				DialogPane newCanvas = loader.load();
 
@@ -339,46 +365,44 @@ public class CanvasController {
 				CreateNewCanvasController createNewCanvasController = loader.getController();
 				createNewCanvasController.showStage(newCanvas);
 
-				// Get width and height information from the create canvas controller in order to create a new canvas
+				// Get width and height information from the create canvas controller in order
+				// to create a new canvas
 				addANewCanvas(canvasHolder.getWidth(), canvasHolder.getHeight());
 
-				// Enables the dropdown options of'Clear canvas' and 'Save as' drop down options available to use after creating a new canvas.
+				// Enables the dropdown options of'Clear canvas' and 'Save as' drop down options
+				// available to use after creating a new canvas.
 				dropClearCanvas.setDisable(false);
 				dropSaveAs.setDisable(false);
 
-				// Enables the user to use the left tool options, such as adding text, rectangle etc onto the canvas.
-				// Is originally disabled because the user needs to create a new canvas before being able to use it.
+				// Enables the user to use the left tool options, such as adding text, rectangle
+				// etc onto the canvas.
+				// Is originally disabled because the user needs to create a new canvas before
+				// being able to use it.
 				textBtn.setDisable(false);
 				rectBtn.setDisable(false);
 				circleBtn.setDisable(false);
 				imageBtn.setDisable(false);
 				canvasBtn.setDisable(false);
-				
+
 			} catch (IOException e) {
 				System.out.println(e.getMessage());
 			}
 		});
 
-		// Clear Canvas : Deletes all edits made onto the canvas, and leaves user an empty canvas
+		// Clear Canvas : Deletes all edits made onto the canvas, and leaves user an
+		// empty canvas
 		dropClearCanvas.setOnAction(event -> {
-			canvas.getChildren().removeAll(text, rectangle, circle, addImage);
+			canvas.getChildren().removeAll(text, rectangle, circle, addImage, textFlow);
 			canvas.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 		});
 
-
-
-		// SAVE AS : Attempt to save canvas as a image.
+		// SAVE AS : Saves canvas as a image.
 		dropSaveAs.setOnAction(e -> {
-		
-//			saveAs();
-//			File file = fileChooser.showSaveDialog(new Stage());
-//			fileChooser.setSelectedExtensionFilter(new ExtensionFilter("images", "*.jpeg", "*.jpg", "*.png"));
-//			if (file != null) {
-//				saveAs();
-//			}
+			saveArtworkAsFile();
 		});
 
-		// ABOUT PAGE : Navigates to a fxml file and changes controller to that designated fxml file. 
+		// ABOUT PAGE : Navigates to a fxml file and changes controller to that
+		// designated fxml file.
 		// The page displays the program version.
 		aboutMenu.setOnAction(event -> {
 			try {
@@ -401,16 +425,17 @@ public class CanvasController {
 			}
 		});
 
-		// LOG OUT : Logs user out and is taken back to the login/signin page. 
+		// LOG OUT : Logs user out and is taken back to the login/signin page.
 		logout.setOnAction(event -> {
 			stage.close();
 			parentStage.show();
 		});
 
-		// ZOOM IN AND OUT : Attempt to zoom in and out feature. 
+		// ZOOM IN AND OUT : Attempt to zoom in and out feature.
 		slider.valueProperty().addListener(new ChangeListener<Number>() {
-			
-			// This method changes the percentage of the zoom in and out when using the slider.
+
+			// This method changes the percentage of the zoom in and out when using the
+			// slider.
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldNumber, Number newNumber) {
 
@@ -422,8 +447,10 @@ public class CanvasController {
 
 	}
 
-	// This method creates a new canvas. It creates a pane and adds it to the centre of the borderpane. 
-	// It also takes in the users width and height, which is why there is a width and height parameter.
+	// This method creates a new canvas. It creates a pane and adds it to the centre
+	// of the borderpane.
+	// It also takes in the users width and height, which is why there is a width
+	// and height parameter.
 	public void addANewCanvas(Double width, Double height) {
 		canvas = new Pane();
 		canvas.setStyle("-fx-background-color: white;");
@@ -433,14 +460,39 @@ public class CanvasController {
 		smartCanvasPane.setCenter(canvas);
 	}
 
-	// This method converts the blob data from the database into a image variable. Which can be used to display the profile picture.
+	// This method saves the the pane as a image.
+	public void saveArtworkAsFile() {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("png files (*.png)", "*.png"));
+
+		// Popup menu appears to save the image
+		File file = fileChooser.showSaveDialog(null);
+
+		if (file != null) {
+			try {
+				// Selects the area of the pane to be captured using the width and height of the
+				// canvas
+				WritableImage writableImage = new WritableImage((int) canvasHolder.getWidth() + 20,
+						(int) canvasHolder.getHeight() + 20);
+				// Creates a snapshot of the canvas
+				canvas.snapshot(null, writableImage);
+				RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
+				// Image is then able to be written as a file
+				ImageIO.write(renderedImage, "png", file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	// This method converts the blob data from the database into a image variable.
+	// Which can be used to display the profile picture.
 	public static Image convertProfileImage(byte[] img) {
 
 		InputStream inputStream = new ByteArrayInputStream(img);
 		Image profilePic = new Image(inputStream);
 		return profilePic;
 	}
-
 
 	// This method is a attempt to create the zoom in and zoom out feature.
 	public void zoomInAndOut() {
@@ -449,12 +501,14 @@ public class CanvasController {
 		canvas.translateZProperty().set(canvas.getTranslateZ());
 	}
 
-	
-	// This is a FXML method which is connected to the Text Button. It adds text elements onto the canvas.
+	// This is a FXML method which is connected to the Text Button. It adds text
+	// elements onto the canvas.
 	@FXML
 	public void addText(ActionEvent Event) {
 
-		// Makes only the text properties visible : The editable options for text. And makes all other editable properties for other elements invisible to avoid clashed visuals
+		// Makes only the text properties visible : The editable options for text. And
+		// makes all other editable properties for other elements invisible to avoid
+		// clashed visuals
 		textVbox.setVisible(true);
 		rectVbox.setVisible(false);
 		circleVbox.setVisible(false);
@@ -465,11 +519,11 @@ public class CanvasController {
 		text.setFont(Font.font("Arial", FontPosture.REGULAR, 11));
 		FlowPane flow = new FlowPane(text);
 		text.setText("Text");
-		text.setX(50);
+		text.setX(0);
 		text.setY(50);
 
-
-		// Below is an attempt to create a selection margin and/or background for the text
+		// Below is an attempt to create a selection margin and/or background for the
+		// text
 		final Rectangle redBorder = new Rectangle(0, 0, Color.TRANSPARENT);
 		redBorder.setStroke(Color.RED);
 		redBorder.setManaged(false);
@@ -489,25 +543,28 @@ public class CanvasController {
 		// Method that enables text properties to be changed and edited
 		changeTextProperties();
 
-		// Below is an attempt to create a selection margin and/or background for the text part 2
+		// Below is an attempt to create a selection margin and/or background for the
+		// text part 2
 //		canvas.getChildren().add(flow);
 //		canvas.getChildren().add(redBorder);
 
 		// Adds text element/s onto the canvas
 		canvas.getChildren().add(text);
 		// Makes all text elements draggable
-		canvas.getChildren().forEach(this::makeDraggable);
+		canvas.getChildren().forEach(this::moveElements);
 
 	}
 
-	// Method changes the text properties. It contains logic that allows editable changes to the text.
+	private FlowPane textFlow;
+
+	// Method changes the text properties. It contains logic that allows editable
+	// changes to the text.
 	public void changeTextProperties() {
 
 		// Changes the text of the text element on key pressed 'Enter'.
 		changeTextInput.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
 				String input = changeTextInput.getText();
-				System.out.println(input);
 				text.setText(input);
 
 			}
@@ -526,8 +583,8 @@ public class CanvasController {
 			if (event.getCode() == KeyCode.ENTER) {
 
 				int fontSize = Integer.parseInt(changeFontSize.getText());
-				System.out.println(fontSize);
-				text.setFont(Font.font(fontSize));
+
+				text.setFont(Font.font(textHolder.getfFamily(), FontPosture.REGULAR, fontSize));
 				textHolder.setfSize(fontSize);
 			}
 		});
@@ -550,36 +607,29 @@ public class CanvasController {
 
 		// Button to assign the text to the left
 		textAlignLeft.setOnAction(event -> {
+			double maxWidth = canvasHolder.getWidth();
+			text.setWrappingWidth(0);
+			text.setWrappingWidth(maxWidth);
 			text.setTextAlignment(TextAlignment.LEFT);
-//			TextFlow text_flow = new TextFlow();
-//			text_flow.getChildren().add(text);
-//			canvas.getChildren().add(text_flow);
-//			text_flow.setTextAlignment(TextAlignment.LEFT);
 
 		});
 
 //		Button to assign the text to the middle
 		textAlignMiddle.setOnAction(event -> {
-//			TextFlow text_flow = new TextFlow();
-//			text_flow.getChildren().add(text);
-//			canvas.getChildren().add(text_flow);
-//			text_flow.setTextAlignment(TextAlignment.CENTER);
-//			VBox vbox = new VBox(text_flow);
-//
-//			// set alignment of vbox
-//			vbox.setAlignment(Pos.CENTER);
-//			canvas.getChildren().add(vbox);
+			double maxWidth = canvasHolder.getWidth();
+			text.setWrappingWidth(0);
+			text.setWrappingWidth(maxWidth);
+			text.wrappingWidthProperty();
 			text.setTextAlignment(TextAlignment.CENTER);
 
 		});
 
 		// Button to assign the text to the right
 		textAlignRight.setOnAction(event -> {
-//			text.setTextAlignment(TextAlignment.RIGHT);
-			TextFlow text_flow = new TextFlow();
-			text_flow.getChildren().add(text);
-			canvas.getChildren().add(text_flow);
-			text_flow.setTextAlignment(TextAlignment.RIGHT);
+			double maxWidth = canvasHolder.getWidth();
+			text.setWrappingWidth(0);
+			text.setWrappingWidth(maxWidth);
+			text.setTextAlignment(TextAlignment.RIGHT);
 		});
 
 		// Changes stroke colour of text
@@ -597,37 +647,10 @@ public class CanvasController {
 			}
 		});
 
-
 		// Attempt to change the text background. It creates a border around the text
 		textBackground.setOnAction(event -> {
-
-			Color colour = textBackground.getValue();
-
-			Rectangle textBorder = new Rectangle(0, 0, colour);
-			textBorder.setStroke(colour);
-			textBorder.setManaged(false);
-			text.boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
-
-				@Override
-				public void changed(ObservableValue<? extends Bounds> observable, Bounds oldValue, Bounds newValue) {
-					textBorder.setLayoutX(text.getBoundsInParent().getMinX());
-					textBorder.setLayoutY(text.getBoundsInParent().getMinY());
-					textBorder.setWidth(text.getBoundsInParent().getWidth() + 5);
-					textBorder.setHeight(text.getBoundsInParent().getHeight() + 5);
-
-				}
-
-			});
-
-			int r = ((int) Math.round(colour.getRed() * 255)) << 24;
-			int g = ((int) Math.round(colour.getGreen() * 255)) << 16;
-			int b1 = ((int) Math.round(colour.getBlue() * 255)) << 8;
-			int a = ((int) Math.round(colour.getOpacity() * 255));
-			String hexColour = String.format("#%08X", (r + g + b1 + a));
-
-//			flow.setStyle("-fx-background-color: " + hexColour + ";");
-			canvas.getChildren().add(textBorder);
-			canvas.getChildren().forEach(this::makeDraggable);
+			// Method to change background colour
+			setTextBgColour();
 
 		});
 
@@ -638,13 +661,56 @@ public class CanvasController {
 			rotate.setPivotX(50);
 			rotate.setPivotY(50);
 			text.getTransforms().addAll(rotate);
+			textFlow.getTransforms().addAll(rotate);
 		});
 
-		// Deletes text element 
+		// Deletes text element
 		deleteElement.setOnAction(event -> {
 			canvas.getChildren().remove(text);
+			canvas.getChildren().remove(textFlow);
 		});
 
+	}
+
+	
+	// The below method changes the background colour of the text element/s
+	public void setTextBgColour() {
+		double textWidth = text.getLayoutBounds().getWidth();
+		double heightWidth = text.getLayoutBounds().getHeight();
+
+		textFlow = new FlowPane(text);
+		Bounds out = textFlow.getBoundsInLocal();
+
+		AtomicInteger cont = new AtomicInteger();
+		StringBuilder sbColors = new StringBuilder();
+		StringBuilder sbInsets = new StringBuilder();
+		// Gets Input from user and converts 'Color' into a hex string
+		Color colour = textBackground.getValue();
+		String hex = String.format("#%02X%02X%02X", (int) (colour.getRed() * 255), (int) (colour.getGreen() * 255),
+				(int) (colour.getBlue() * 255));
+
+		textFlow.getChildrenUnmodifiable().forEach(n -> {
+			// Creates a margin using the dimensions of the text
+			Bounds b = ((Text) n).getBoundsInParent();
+			sbInsets.append(b.getMinY()-50);
+			sbInsets.append(Math.min(textWidth, out.getMaxX()) - b.getMaxX());
+			sbInsets.append(Math.min(heightWidth, out.getMaxY()) - b.getMaxY());
+			sbInsets.append(b.getMinX());
+			if (cont.getAndIncrement() < textFlow.getChildren().size() - 1) {
+				sbColors.append(hex);
+				sbInsets.append(", ");
+			}
+		});
+
+		// Adds background colour onto text
+		textFlow.setStyle("-fx-background-color: " + hex + "; -fx-background-insets: " + sbInsets.toString() + ";");
+		canvas.getChildren().add(textFlow);
+//	    Group textWithBg = new Group();
+//		    textWithBg.getChildren().addAll(textFlow, text);
+//		    canvas.getChildren().add(textWithBg);
+
+		// Makes the colour background moveable
+		canvas.getChildren().forEach(this::moveElements);
 	}
 
 //	This is a FXML method which is connected to the 'Rect' Button, aka Rectangle button. It adds rectangle elements onto the canvas.
@@ -670,11 +736,12 @@ public class CanvasController {
 
 		// Adds rectangle element/s to canvas
 		canvas.getChildren().add(rectangle);
-		canvas.getChildren().forEach(this::makeDraggable);
+		canvas.getChildren().forEach(this::moveElements);
 
 	}
 
-	// Method changes the rectangle properties, aka 'rect' for short. It contains logic that allows editable changes to the rectangle/s.
+	// Method changes the rectangle properties, aka 'rect' for short. It contains
+	// logic that allows editable changes to the rectangle/s.
 	public void changeRectProperties() {
 
 		// Changes rectangle border colour.
@@ -760,13 +827,12 @@ public class CanvasController {
 		changeCircleProperties();
 
 		canvas.getChildren().add(circle);
-		canvas.getChildren().forEach(this::makeDraggableC);
-		
-
+		canvas.getChildren().forEach(this::moveElementsC);
 
 	}
 
-	// Method changes the circle properties. It contains logic that allows editable changes to the circle/s.
+	// Method changes the circle properties. It contains logic that allows editable
+	// changes to the circle/s.
 	public void changeCircleProperties() {
 		// Changes colour of the border of circle element/s.
 		circleBorderColour.setOnAction(event -> {
@@ -780,7 +846,7 @@ public class CanvasController {
 				String width = circleBorderWidth.getText();
 				int borderWidth = Integer.parseInt(width);
 				circle.setStrokeWidth(borderWidth);
-				
+
 			}
 		});
 
@@ -790,7 +856,8 @@ public class CanvasController {
 			circle.setFill(colour);
 		});
 
-		// Changes circle radius (aka size of circle) of circle/s on key pressed 'Enter'.
+		// Changes circle radius (aka size of circle) of circle/s on key pressed
+		// 'Enter'.
 		circleRadius.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
 				String radius = circleRadius.getText();
@@ -798,8 +865,6 @@ public class CanvasController {
 				circle.setRadius(circleRadius);
 				double w = circle.getLayoutBounds().getWidth();
 				double h = circle.getLayoutBounds().getHeight();
-				System.out.println(w);
-				System.out.println(h);
 				shapeHolder.setCircleWidth(w);
 				shapeHolder.setCircleHeight(h);
 			}
@@ -811,7 +876,7 @@ public class CanvasController {
 		});
 
 	}
-	
+
 //	This is a FXML method which is connected to the Image Button. It adds images onto the canvas.
 	@FXML
 	public void addImage(ActionEvent Event) {
@@ -842,11 +907,12 @@ public class CanvasController {
 
 		changeImageProperties();
 		canvas.getChildren().add(addImage);
-		canvas.getChildren().forEach(this::makeDraggable);
+		canvas.getChildren().forEach(this::moveElements);
 
 	}
-	
-	// Method changes the image properties. It contains logic that allows editable changes to the image/s.
+
+	// Method changes the image properties. It contains logic that allows editable
+	// changes to the image/s.
 	public void changeImageProperties() {
 
 		imgChangePath.setOnAction(event -> {
@@ -864,7 +930,7 @@ public class CanvasController {
 
 			}
 		});
-		
+
 		// Changes image/s width on key pressed 'Enter'.
 		imgWidth.setOnKeyPressed(event -> {
 			if (event.getCode() == KeyCode.ENTER) {
@@ -901,7 +967,7 @@ public class CanvasController {
 //	This is a FXML method which is connected to the Canvas Button. It modifies/changes the canvas background
 	@FXML
 	public void modifyCanvas(ActionEvent Event) {
-		
+
 //		Makes only the Canvas properties visible : The editable options for the canvas. And makes all other editable properties for other elements invisible to avoid clashed visuals
 
 		textVbox.setVisible(false);
@@ -916,62 +982,68 @@ public class CanvasController {
 
 		});
 
-
 	}
 
-	// This method enables elements to become draggable. It also shows the coordinates of the width and height of an element : rectangle.
-	public void makeDraggable(Node node) {
+	// This method enables elements to become draggable. It also shows the
+	// coordinates of the width and height of an element : rectangle.
+	public void moveElements(Node node) {
 
-		// When the users mouse clicks on a element, it retrieves the X and Y values. it also prints it as coordinates in the Smart Canvas application
+		// When the users mouse clicks on a element, it retrieves the X and Y values. it
+		// also prints it as coordinates in the Smart Canvas application
 		node.setOnMousePressed(e -> {
 			startX = e.getSceneX() - node.getTranslateX();
 			startY = e.getSceneX() - node.getTranslateX();
 			double dragPointX = e.getX();
 			double dragPointY = e.getY();
 			coordinates.setText("x: " + DECIMAL_FORMAT.format(dragPointX) + " y: " + DECIMAL_FORMAT.format(dragPointY)
-			+ " w: " + shapeHolder.getRectWidth() + " h: " + shapeHolder.getRectHeight());
-			
+					+ " w: " + shapeHolder.getRectWidth() + " h: " + shapeHolder.getRectHeight());
+
 		});
 
-		// Enables user to drag elements and prints X and Y coordinates while being dragged.
+		// Enables user to drag elements and prints X and Y coordinates while being
+		// dragged.
 		node.setOnMouseDragged(e -> {
 			node.setTranslateX(e.getSceneX() - startX);
 			node.setTranslateY(e.getSceneY() + 100 - startY);
 			double dragPointX = e.getX();
 			double dragPointY = e.getY();
 			coordinates.setText("x: " + DECIMAL_FORMAT.format(dragPointX) + " y: " + DECIMAL_FORMAT.format(dragPointY)
-			+ " w: " + shapeHolder.getRectWidth() + " h: " + shapeHolder.getRectHeight());
+					+ " w: " + shapeHolder.getRectWidth() + " h: " + shapeHolder.getRectHeight());
 		});
 
 	}
-	
-	// This method enables elements to become draggable, but is creates to also show the width and height of the circle. 
-	public void makeDraggableC(Node node) {
 
-		// When the users mouse clicks on a element, it retrieves the X and Y values. it also prints it as coordinates in the Smart Canvas application
+	// This method enables elements to become draggable, but is creates to also show
+	// the width and height of the circle.
+	public void moveElementsC(Node node) {
+
+		// When the users mouse clicks on a element, it retrieves the X and Y values. it
+		// also prints it as coordinates in the Smart Canvas application
 		node.setOnMousePressed(e -> {
 			startX = e.getSceneX() - node.getTranslateX();
 			startY = e.getSceneX() - node.getTranslateX();
 			double dragPointX = e.getX();
 			double dragPointY = e.getY();
 			coordinates.setText("x: " + DECIMAL_FORMAT.format(dragPointX) + " y: " + DECIMAL_FORMAT.format(dragPointY)
-			+ " w: " + shapeHolder.getCircleWidth() + " h: " + shapeHolder.getCircleHeight());
-			
+					+ " w: " + shapeHolder.getCircleWidth() + " h: " + shapeHolder.getCircleHeight());
+
 		});
 
-		// Enables user to drag elements and prints X and Y coordinates while being dragged.
+		// Enables user to drag elements and prints X and Y coordinates while being
+		// dragged.
 		node.setOnMouseDragged(e -> {
 			node.setTranslateX(e.getSceneX() - startX);
 			node.setTranslateY(e.getSceneY() + 100 - startY);
 			double dragPointX = e.getX();
 			double dragPointY = e.getY();
 			coordinates.setText("x: " + DECIMAL_FORMAT.format(dragPointX) + " y: " + DECIMAL_FORMAT.format(dragPointY)
-			+ " w: " + DECIMAL_FORMAT.format(shapeHolder.getCircleWidth()) + " h: " + DECIMAL_FORMAT.format(shapeHolder.getCircleHeight()));
+					+ " w: " + DECIMAL_FORMAT.format(shapeHolder.getCircleWidth()) + " h: "
+					+ DECIMAL_FORMAT.format(shapeHolder.getCircleHeight()));
 		});
 
 	}
-	
-	// Method to show the Smart Canvas fxml and set it as the current scene. 
+
+	// Method to show the Smart Canvas fxml and set it as the current scene.
 	public void showStage(BorderPane root) {
 		Scene scene = new Scene(root, 1411, 856);
 		stage.setScene(scene);

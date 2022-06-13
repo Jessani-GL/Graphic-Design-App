@@ -62,15 +62,16 @@
             <Insets bottom="20.0" top="50.0" />
          </GridPane.margin>
       </Label>
-      <Button fx:id="okBtn" mnemonicParsing="false" text="Ok" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <Button fx:id="okBtn" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Ok" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <GridPane.margin>
-            <Insets left="120.0" />
+            <Insets left="210.0" />
          </GridPane.margin>
       </Button>
-      <Button fx:id="cancel" mnemonicParsing="false" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <Button fx:id="cancel" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <GridPane.margin>
-            <Insets left="170.0" />
+            <Insets left="250.0" />
          </GridPane.margin>
       </Button>
+      <Label fx:id="message" textFill="#ff5b5b" GridPane.columnIndex="1" GridPane.rowIndex="2" />
    </children>
 </GridPane>

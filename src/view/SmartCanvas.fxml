@@ -70,7 +70,7 @@
                            </children>
                         </Pane>
                         <Label text="Rectangle Rotate:" />
-                        <Button fx:id="rectangleRotate" mnemonicParsing="false" text="Rotate" />
+                        <Button fx:id="rectangleRotate" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Rotate" />
                         <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
                         <Label text="Background" />
                         <ColorPicker fx:id="rectBgColour" style="-fx-background-color: f0f0f0;">
@@ -118,13 +118,13 @@
                         <Label text="Alignment:" />
                         <Pane prefHeight="48.0" prefWidth="254.0">
                            <children>
-                              <Button fx:id="textAlignLeft" layoutX="5.0" layoutY="8.0" mnemonicParsing="false" text="Left" />
-                              <Button fx:id="textAlignMiddle" layoutX="50.0" layoutY="9.0" mnemonicParsing="false" text="Middle" />
-                              <Button fx:id="textAlignRight" layoutX="108.0" layoutY="10.0" mnemonicParsing="false" text="Right" />
+                              <Button fx:id="textAlignLeft" layoutX="5.0" layoutY="8.0" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Left" />
+                              <Button fx:id="textAlignMiddle" layoutX="50.0" layoutY="9.0" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Middle" />
+                              <Button fx:id="textAlignRight" layoutX="108.0" layoutY="10.0" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Right" />
                            </children>
                         </Pane>
                         <Label text="Rotation:" />
-                        <Button fx:id="rotateText" mnemonicParsing="false" text="Rotate" />
+                        <Button fx:id="rotateText" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Rotate" />
                         <Separator prefWidth="200.0" style="-fx-background-color: gray;" />
                         <Label text="Border colour:" />
                         <ColorPicker fx:id="textBorderColour" style="-fx-background-color: f0f0f0;" />
@@ -184,7 +184,7 @@
                            </children>
                         </Pane>
                         <Label text="Image rotate:" />
-                        <Button fx:id="imgRotate" mnemonicParsing="false" text="Rotate" />
+                        <Button fx:id="imgRotate" mnemonicParsing="false" style="-fx-background-color: f0f0f0;" text="Rotate" />
                      </children>
                      <padding>
                         <Insets left="10.0" right="10.0" />
